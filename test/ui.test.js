@@ -20,7 +20,7 @@ function page(danger) {
   };
   const context = {
     document: { getElementById: element, querySelectorAll: () => [], createElement: () => ({}) },
-    window: {}, matchMedia: () => ({ matches: true }), requestAnimationFrame: (fn) => fn(),
+    window: {}, setInterval: () => 0, clearInterval() {}, matchMedia: () => ({ matches: true }), requestAnimationFrame: (fn) => fn(),
     fetch: async () => ({ ok: true, json: async () => ({ danger, meaning: 'Ý nghĩa', reply: 'Trả lời', avoid: 'Đừng nói' }) }),
   };
   runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], context);
