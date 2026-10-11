@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thông Dịch Viên Tình Yêu 💘</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: linear-gradient(160deg, #ffe4ec, #fff5f8); color: #2b1a22; min-height: 100vh; }
+  main { max-width: 560px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { text-align: center; font-size: 1.9rem; margin: 8px 0 4px; color: #d6336c; }
+  .sub { text-align: center; margin: 0 0 18px; color: #7a5563; }
+  .toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  button { font: inherit; border: 0; border-radius: 14px; padding: 12px; cursor: pointer; }
+  .toggle button { background: #fff; color: #d6336c; font-weight: 600; border: 2px solid #f7b6cb; }
+  .toggle button[aria-pressed="true"] { background: #d6336c; color: #fff; border-color: #d6336c; }
+  textarea { width: 100%; font: inherit; font-size: 1.15rem; padding: 14px; border-radius: 14px; border: 2px solid #f7b6cb; resize: vertical; min-height: 90px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .chips button { background: #fff; padding: 6px 12px; border-radius: 999px; font-size: .95rem; border: 1px solid #f7b6cb; }
+  .row { display: flex; gap: 8px; }
+  .row .icon { background: #fff; border: 2px solid #f7b6cb; font-size: 1.3rem; width: 54px; }
+  #go { flex: 1; background: #d6336c; color: #fff; font-size: 1.2rem; font-weight: 700; }
+  #go:disabled { opacity: .6; }
+  #preview { max-width: 100%; max-height: 160px; border-radius: 12px; margin-top: 10px; display: block; }
+  .card { background: #fff; border-radius: 16px; padding: 14px 16px; margin-top: 12px; box-shadow: 0 2px 10px #d6336c1a; }
+  .card h3 { margin: 0 0 6px; font-size: .95rem; color: #7a5563; }
+  .card p { margin: 0; font-size: 1.15rem; line-height: 1.45; }
+  .meter { height: 18px; background: #f3e3e9; border-radius: 999px; overflow: hidden; }
+  .meter div { height: 100%; width: 0; transition: width .8s ease, background .8s; }
+  .big { font-size: 1.6rem; font-weight: 800; }
+  #speak { width: 100%; margin-top: 12px; background: #2b1a22; color: #fff; font-weight: 600; }
+  .err { color: #c92a2a; text-align: center; margin-top: 12px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>💘 Thông Dịch Viên Tình Yêu</h1>
+  <p class="sub">Họ nói một đằng, AI dịch ra ý thật</p>
+
+  <div class="toggle">
+    <button data-dir="gf" aria-pressed="true">💁‍♀️ Giải mã Bạn Gái</button>
+    <button data-dir="bf" aria-pressed="false">🙋‍♂️ Giải mã Bạn Trai</button>
+  </div>
+
+  <textarea id="text" maxlength="500" placeholder="Ví dụ: Em không sao đâu…"></textarea>
+  <div class="chips" id="chips"></div>
+  <img id="preview" hidden alt="Ảnh đoạn chat">
+
+  <div class="row">
+    <button class="icon" id="mic" title="Nói">🎤</button>
+    <button class="icon" id="pick" title="Ảnh chụp đoạn chat">📷</button>
+    <input type="file" id="file" accept="image/*" hidden>
+    <button id="go">Giải mã!</button>
+  </div>
+
+  <p class="err" id="err" hidden></p>
+
+  <section id="out" hidden>
+    <div class="card">
+      <h3>🚨 Mức nguy hiểm: <span class="big" id="dangerNum">0%</span></h3>
+      <div class="meter"><div id="bar"></div></div>
+    </div>
+    <div class="card"><h3>🧠 Ý thật sự</h3><p id="meaning"></p></div>
+    <div class="card"><h3>✅ Nên trả lời</h3><p id="reply"></p></div>
+    <div class="card"><h3>❌ Tuyệt đối đừng nói</h3><p id="avoid"></p></div>
+    <button id="speak">🔊 Đọc kịch tính</button>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const EXAMPLES = {
+    gf: ['Em không sao đâu', 'Tùy anh', 'Anh đi đi, em không giận'],
+    bf: ['Anh bận chút', 'Ừ', 'Để anh suy nghĩ đã'],
+  };
+  let dir = 'gf', image = null;
+
+  function setDir(d) {
+    dir = d;
+    document.querySelectorAll('.toggle button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.dir === d));
+    $('text').placeholder = 'Ví dụ: ' + EXAMPLES[d][0] + '…';
+    $('chips').replaceChildren(...EXAMPLES[d].map((t) => {
+      const b = document.createElement('button');
+      b.textContent = t;
+      b.onclick = () => { $('text').value = t; decode(); };
+      return b;
+    }));
+  }
+  document.querySelectorAll('.toggle button').forEach((b) => (b.onclick = () => setDir(b.dataset.dir)));
+  setDir('gf');
+
+  async function post(url, body) {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Có lỗi xảy ra, thử lại nhé.');
+    return r;
+  }
+
+  function showError(msg) { $('err').textContent = msg; $('err').hidden = !msg; }
+
+  async function decode() {
+    showError('');
+    $('go').disabled = true;
+    $('go').textContent = 'Đang phân tích tâm lý…';
+    try {
+      const d = await (await post('/api/translate', { text: $('text').value, image, direction: dir })).json();
+      $('meaning').textContent = d.meaning;
+      $('reply').textContent = d.reply;
+      $('avoid').textContent = d.avoid;
+      $('dangerNum').textContent = d.danger + '%';
+      $('out').hidden = false;
+      $('bar').style.width = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        $('bar').style.width = d.danger + '%';
+        $('bar').style.background = d.danger < 40 ? '#2f9e44' : d.danger < 70 ? '#f59f00' : '#e03131';
+      }));
+      $('out').scrollIntoView({ behavior: 'smooth' });
+    } catch (e) {
+      showError(e.message);
+    } finally {
+      $('go').disabled = false;
+      $('go').textContent = 'Giải mã!';
+    }
+  }
+  $('go').onclick = decode;
+
+  $('pick').onclick = () => $('file').click();
+  $('file').onchange = () => {
+    const f = $('file').files[0];
+    if (!f) return;
+    const fr = new FileReader();
+    fr.onload = () => { image = fr.result; $('preview').src = image; $('preview').hidden = false; };
+    fr.readAsDataURL(f);
+  };
+  $('preview').onclick = () => { image = null; $('preview').hidden = true; $('file').value = ''; };
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) $('mic').hidden = true;
+  else $('mic').onclick = () => {
+    const rec = new SR();
+    rec.lang = 'vi-VN';
+    rec.onresult = (e) => { $('text').value = e.results[0][0].transcript; decode(); };
+    rec.onerror = () => showError('Mic không nghe rõ, gõ giúp mình nhé.');
+    rec.start();
+    $('mic').textContent = '👂';
+    rec.onend = () => ($('mic').textContent = '🎤');
+  };
+
+  $('speak').onclick = async () => {
+    $('speak').disabled = true;
+    try {
+      const blob = await (await post('/api/speak', { text: $('meaning').textContent })).blob();
+      new Audio(URL.createObjectURL(blob)).play();
+    } catch (e) {
+      showError(e.message);
+    } finally {
+      $('speak').disabled = false;
+    }
+  };
+</script>
+</body>
+</html>
