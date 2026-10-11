@@ -69,6 +69,15 @@
   .meter { height: 16px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; margin-top: var(--space-4); }
   .meter div { height: 100%; width: 0; background: var(--level-color); border-radius: inherit; transition: width .6s ease; }
   #out:not([hidden]) { animation: appear .25s ease-out; }
+  .loading { text-align: center; padding: var(--space-8) 0; }
+  .loading .mascot { animation: beat .6s ease-in-out infinite; }
+  .loading .lens { position: absolute; font-size: 40px; top: -6px; animation: scan 1.6s ease-in-out infinite; }
+  .loading .scan { height: 8px; max-width: 240px; margin: var(--space-4) auto; background: var(--primary-soft); border-radius: var(--radius-pill); overflow: hidden; }
+  .loading .scan div { height: 100%; width: 40%; background: var(--primary); border-radius: inherit; animation: sweep 1.1s ease-in-out infinite; }
+  #loadingLine { color: var(--muted); min-height: 1.5em; animation: appear .3s ease-out; }
+  @keyframes beat { 0%, 100% { transform: rotate(-6deg) scale(1); } 30% { transform: rotate(-6deg) scale(1.12); } 60% { transform: rotate(-6deg) scale(.96); } }
+  @keyframes scan { 0%, 100% { left: -24px; } 50% { left: 96px; } }
+  @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
   #speak { width: 100%; margin-top: var(--space-4); background: var(--focus); color: var(--surface); }
   .err { color: var(--danger); background: var(--primary-soft); border-radius: var(--radius-input); padding: var(--space-3); margin-top: var(--space-4); }
   .footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: var(--space-6); }
@@ -117,6 +126,12 @@
         <h2>Trái tim đang hóng chuyện</h2>
         <p>Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!</p>
       </div>
+      <div class="loading" id="loading" hidden>
+        <div class="mascot" aria-hidden="true"><span class="heart">♥</span><span class="face">◉ _ ◉</span><span class="lens">🔍</span></div>
+        <h2>Đang phân tích tâm lý…</h2>
+        <div class="scan" aria-hidden="true"><div></div></div>
+        <p id="loadingLine"></p>
+      </div>
       <div id="out" hidden aria-live="polite" aria-atomic="true">
         <div class="card danger-card">
           <div class="danger-heading">
@@ -141,6 +156,14 @@
     gf: ['Em không sao đâu', 'Tùy anh', 'Anh đi đi, em không giận'],
     bf: ['Anh bận chút', 'Ừ', 'Để anh suy nghĩ đã'],
   };
+  const LOADING_LINES = [
+    'Đang đếm số dấu chấm cuối câu…',
+    'Đang tra từ điển Dỗi – Việt…',
+    'Đang đo nhiệt độ tin nhắn… 🌡️',
+    'Đang so sánh với 1.000 lần “em không sao”…',
+    'Đang kiểm tra lịch sử seen không rep…',
+    'Đang hỏi ý kiến hội bạn thân…',
+  ];
   let dir = 'gf', image = null;
 
   function setDir(d) {
@@ -171,6 +194,18 @@
     $('status').textContent = 'Đang phân tích tâm lý…';
     $('go').disabled = true;
     $('go').textContent = 'Đang phân tích tâm lý…';
+    const hadResult = !$('out').hidden;
+    $('empty').hidden = $('out').hidden = true;
+    $('loading').hidden = false;
+    let i = 0;
+    const tick = () => {
+      $('loadingLine').textContent = LOADING_LINES[i++ % LOADING_LINES.length];
+      $('loadingLine').style.animation = 'none';
+      $('loadingLine').offsetWidth; // restart fade-in
+      $('loadingLine').style.animation = '';
+    };
+    tick();
+    const timer = setInterval(tick, 1100);
     try {
       const d = await (await post('/api/translate', { text: $('text').value, image, direction: dir })).json();
       $('meaning').textContent = d.meaning;
@@ -192,7 +227,11 @@
       $('out').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
     } catch (e) {
       showError(e.message);
+      $('out').hidden = !hadResult;
+      $('empty').hidden = hadResult;
     } finally {
+      clearInterval(timer);
+      $('loading').hidden = true;
       $('go').disabled = false;
       $('go').textContent = 'Giải mã! ✨';
       $('status').textContent = '';
