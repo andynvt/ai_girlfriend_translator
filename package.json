@@ -1,0 +1,6 @@
+{
+  "name": "thong-dich-tinh-yeu",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test" }
+}
