@@ -1,0 +1,25 @@
+{
+  "kind": "sprite-gen-gen-set-report",
+  "run_dir": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot",
+  "states": [
+    "choose"
+  ],
+  "ok": 1,
+  "failed": [],
+  "not_started": [],
+  "items": [
+    {
+      "state": "choose",
+      "out": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/raw/choose.png",
+      "report": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/reports/gen-set/choose.json",
+      "refs": [
+        "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/base-source.png",
+        "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/references/layout-guides/choose.png"
+      ],
+      "provider": "codex",
+      "provider_resolved_from": "explicit",
+      "elapsed_seconds": 72.2,
+      "ok": true
+    }
+  ]
+}

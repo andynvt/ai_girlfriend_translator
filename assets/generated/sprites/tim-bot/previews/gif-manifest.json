@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "kind": "sprite-gen-gif-run",
+  "run_dir": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot",
+  "exports": [
+    {
+      "state": "greet",
+      "output": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/greet.gif",
+      "frames": 4,
+      "fps": 5.0,
+      "loop": false,
+      "gif_report": {
+        "path": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/greet.gif",
+        "frames": 4,
+        "delay_ticks": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "loop": 0,
+        "transparent": true,
+        "disposal": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "state": "choose",
+      "output": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/choose.gif",
+      "frames": 4,
+      "fps": 4.0,
+      "loop": false,
+      "gif_report": {
+        "path": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/choose.gif",
+        "frames": 4,
+        "delay_ticks": [
+          25,
+          25,
+          25,
+          25
+        ],
+        "loop": 0,
+        "transparent": true,
+        "disposal": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "state": "input",
+      "output": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/input.gif",
+      "frames": 4,
+      "fps": 4.0,
+      "loop": false,
+      "gif_report": {
+        "path": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/input.gif",
+        "frames": 4,
+        "delay_ticks": [
+          25,
+          25,
+          25,
+          25
+        ],
+        "loop": 0,
+        "transparent": true,
+        "disposal": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "state": "waiting",
+      "output": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/waiting.gif",
+      "frames": 4,
+      "fps": 4.0,
+      "loop": true,
+      "gif_report": {
+        "path": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/waiting.gif",
+        "frames": 4,
+        "delay_ticks": [
+          25,
+          25,
+          25,
+          25
+        ],
+        "loop": 0,
+        "transparent": true,
+        "disposal": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "state": "reading",
+      "output": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/reading.gif",
+      "frames": 4,
+      "fps": 5.0,
+      "loop": true,
+      "gif_report": {
+        "path": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot/previews/reading.gif",
+        "frames": 4,
+        "delay_ticks": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "loop": 0,
+        "transparent": true,
+        "disposal": [
+          2,
+          2,
+          2,
+          2
+        ]
+      }
+    }
+  ]
+}

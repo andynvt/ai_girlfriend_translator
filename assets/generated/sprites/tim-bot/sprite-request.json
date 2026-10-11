@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "kind": "sprite-gen-request",
+  "engine": "component-row",
+  "character": {
+    "id": "tim-bot",
+    "description": "Tim Bot: approved pink heart-shaped matte clay 2.5D mascot with short arms and legs, dark plum eyes and lavender headset microphone. Preserve the approved master identity.",
+    "base_image": "base-source.png"
+  },
+  "cell": {
+    "shape": "square",
+    "width": 256,
+    "height": 256,
+    "safe_margin_x": 20,
+    "safe_margin_y": 20,
+    "size": 256,
+    "safe_margin": 20
+  },
+  "chroma_key": {
+    "name": "green",
+    "hex": "#00FF00",
+    "rgb": [
+      0,
+      255,
+      0
+    ],
+    "selection": "manual"
+  },
+  "states": {
+    "greet": {
+      "frames": 4,
+      "fps": 5,
+      "loop": false,
+      "action": "Friendly greeting one-shot. Frame 1 both arms relaxed; frame 2 raise right hand beside head; frame 3 wave right hand outward with a gentle smile; frame 4 return hand to relaxed position. Feet stay planted, same body scale and headset."
+    },
+    "choose": {
+      "frames": 4,
+      "fps": 4,
+      "loop": false,
+      "action": "Guide the user toward nearby options with a VERY SMALL bent-arm gesture inside the width of the headphones. Frame 1 both arms relaxed; frame 2 left forearm bends upward with elbow kept against the body; frame 3 left mitten points gently to image right but never extends beyond the outer edge of the right headphone; frame 4 return to relaxed arms. Headset, heart body and feet must have IDENTICAL height, width, location and front-facing orientation in all frames. No leaning, no nod, no wink, no body shrinking. Only the forearm changes. Same body scale and both feet planted at same baseline in every slot."
+    },
+    "input": {
+      "frames": 4,
+      "fps": 4,
+      "loop": false,
+      "action": "Invite the user to enter a message. Hold a small cream envelope in left hand touching the body throughout all four frames. Frame 1 envelope held at belly; frame 2 right hand gestures toward envelope; frame 3 open right palm toward user inviting input; frame 4 right hand returns beside envelope. No detached objects, no text, keep feet planted."
+    },
+    "waiting": {
+      "frames": 4,
+      "fps": 4,
+      "loop": true,
+      "action": "Seamless compact thinking cycle while waiting for an API response. A small lavender magnifying glass is held in right hand throughout, touching the body silhouette. Frame 1 lens near right cheek, frame 2 lens moves inward toward smile, frame 3 lens returns near cheek with eyes briefly squinting, frame 4 returns near frame 1 with eyes open. Very small arm motion, no head rotation, no body bob, no detached particles, no chat bubble, feet planted."
+    },
+    "reading": {
+      "frames": 4,
+      "fps": 5,
+      "loop": true,
+      "action": "Seamless speaking cycle while reading results aloud. Hold a small cream result card with both hands against lower body throughout all frames; no printed text. Only mouth changes clearly: small relaxed smile, small open mouth, wider speaking mouth, small open mouth returning toward relaxed smile. Eyes stable, body and headset unchanged, feet planted, card stationary."
+    }
+  },
+  "style": "Soft matte clay 2.5D, pastel rose and lavender, smooth shading, NOT pixel art, no outlines, no text or floating particles. Keep both feet planted at a common baseline and body scale stable across every pose.",
+  "layout": "taxonomy/v1",
+  "fit": {
+    "resample": "lanczos",
+    "align_x": "foot-centroid",
+    "align_y": "bottom",
+    "ground_frames": true,
+    "pixel_unfake": false
+  },
+  "chroma": {
+    "mode": "rgb",
+    "unmix_reach": 4,
+    "spill_max_fraction": 0.005
+  }
+}

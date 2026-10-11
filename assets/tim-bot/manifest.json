@@ -1,0 +1,240 @@
+{
+  "characterId": "tim-bot",
+  "engine": "component-row",
+  "game_input": "tim-bot-atlas.png",
+  "degraded_static_fallback": false,
+  "curation_applied": false,
+  "frame_variant": "pixel",
+  "sprite_sheet_alpha": "tim-bot-atlas.png",
+  "sprite_sheet_alpha_report": "tim-bot-atlas.report.json",
+  "base_image": "concept-v1/tim-bot.png",
+  "cell": {
+    "shape": "square",
+    "width": 256,
+    "height": 256,
+    "safe_margin_x": 20,
+    "safe_margin_y": 20,
+    "size": 256,
+    "safe_margin": 20
+  },
+  "chroma_key": {
+    "name": "green",
+    "hex": "#00FF00",
+    "rgb": [
+      0,
+      255,
+      0
+    ],
+    "selection": "manual"
+  },
+  "animation": {
+    "cellWidth": 256,
+    "cellHeight": 256,
+    "columns": 4,
+    "rows": {
+      "greet": {
+        "row": 0,
+        "frames": 4,
+        "fps": 5,
+        "durations_ms": [
+          200,
+          200,
+          200,
+          200
+        ],
+        "loop": false,
+        "frame_variant": "pixel"
+      },
+      "choose": {
+        "row": 1,
+        "frames": 4,
+        "fps": 4,
+        "durations_ms": [
+          250,
+          250,
+          250,
+          250
+        ],
+        "loop": false,
+        "frame_variant": "pixel"
+      },
+      "input": {
+        "row": 2,
+        "frames": 4,
+        "fps": 4,
+        "durations_ms": [
+          250,
+          250,
+          250,
+          250
+        ],
+        "loop": false,
+        "frame_variant": "pixel"
+      },
+      "waiting": {
+        "row": 3,
+        "frames": 4,
+        "fps": 4,
+        "durations_ms": [
+          250,
+          250,
+          250,
+          250
+        ],
+        "loop": true,
+        "frame_variant": "pixel"
+      },
+      "reading": {
+        "row": 4,
+        "frames": 4,
+        "fps": 5,
+        "durations_ms": [
+          200,
+          200,
+          200,
+          200
+        ],
+        "loop": true,
+        "frame_variant": "pixel"
+      }
+    }
+  },
+  "frame_layout": {
+    "sheetWidth": 1024,
+    "sheetHeight": 1280,
+    "cellWidth": 256,
+    "cellHeight": 256,
+    "rows": {
+      "greet": [
+        {
+          "x": 0,
+          "y": 0,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 256,
+          "y": 0,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 512,
+          "y": 0,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 768,
+          "y": 0,
+          "w": 256,
+          "h": 256
+        }
+      ],
+      "choose": [
+        {
+          "x": 0,
+          "y": 256,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 256,
+          "y": 256,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 512,
+          "y": 256,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 768,
+          "y": 256,
+          "w": 256,
+          "h": 256
+        }
+      ],
+      "input": [
+        {
+          "x": 0,
+          "y": 512,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 256,
+          "y": 512,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 512,
+          "y": 512,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 768,
+          "y": 512,
+          "w": 256,
+          "h": 256
+        }
+      ],
+      "waiting": [
+        {
+          "x": 0,
+          "y": 768,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 256,
+          "y": 768,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 512,
+          "y": 768,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 768,
+          "y": 768,
+          "w": 256,
+          "h": 256
+        }
+      ],
+      "reading": [
+        {
+          "x": 0,
+          "y": 1024,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 256,
+          "y": 1024,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 512,
+          "y": 1024,
+          "w": 256,
+          "h": 256
+        },
+        {
+          "x": 768,
+          "y": 1024,
+          "w": 256,
+          "h": 256
+        }
+      ]
+    }
+  }
+}

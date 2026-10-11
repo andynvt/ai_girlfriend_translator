@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tim Bot · Bộ animation</title>
+<style>
+  body { max-width: 1000px; margin: 40px auto; padding: 0 20px; background: #fff8f3; color: #291b23; font: 18px/1.5 system-ui, sans-serif; }
+  h1 { color: #b4235a; } .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+  figure { margin: 0; padding: 20px; text-align: center; background: white; border: 1px solid #e6c8d6; border-radius: 24px; }
+  img { display: block; width: 160px; height: 160px; object-fit: contain; margin: auto; } .still { display: none; }
+  figcaption { font-weight: 700; } small { display: block; font-weight: 400; color: #715363; margin-top: 8px; }
+  a { color: #b4235a; } @media (prefers-reduced-motion: reduce) { .motion { display: none; } .still { display: block; } }
+</style>
+<h1>Tim Bot ♡</h1>
+<p>Mẫu A đã duyệt · 5 animation · 20 frame nền trong suốt · 11/10/2026.</p>
+<p>GIF bên dưới lặp lại để xem chuyển động. Trong app, bot thở nhẹ liên tục; hover chạy lại cử chỉ và sau khoảng 12 giây không thao tác tự nhắc theo màn hình. Chờ API và đọc kết quả lặp theo trạng thái thực tế, không bị hover hoặc nhắc tự động ghi đè. Giảm chuyển động tắt các hiệu ứng này.</p>
+<div class="grid">
+  <figure><img class="motion" src="../assets/generated/sprites/tim-bot/previews/greet.gif" alt="Tim Bot vẫy tay chào"><img class="still" src="../assets/generated/sprites/tim-bot/curated/greet-frame-0.png" alt="Tim Bot chào"><figcaption>Chào hỏi<small>Khi mở onboarding.</small></figcaption></figure>
+  <figure><img class="motion" src="../assets/generated/sprites/tim-bot/previews/choose.gif" alt="Tim Bot chỉ lựa chọn"><img class="still" src="../assets/generated/sprites/tim-bot/curated/choose-frame-0.png" alt="Tim Bot hướng dẫn chọn"><figcaption>Chọn option<small>Khi focus lựa chọn ngôn ngữ hoặc người ấy.</small></figcaption></figure>
+  <figure><img class="motion" src="../assets/generated/sprites/tim-bot/previews/input.gif" alt="Tim Bot cầm phong thư mời nhập thông tin"><img class="still" src="../assets/generated/sprites/tim-bot/curated/input-frame-0.png" alt="Tim Bot cầm phong thư"><figcaption>Nhập thông tin<small>Khi focus tên, lời nhắn hoặc bối cảnh.</small></figcaption></figure>
+  <figure><img class="motion" src="../assets/generated/sprites/tim-bot/previews/waiting.gif" alt="Tim Bot suy nghĩ với kính lúp"><img class="still" src="../assets/generated/sprites/tim-bot/curated/waiting-frame-0.png" alt="Tim Bot cầm kính lúp"><figcaption>Chờ API<small>Lặp đến khi giải mã thành công hoặc lỗi.</small></figcaption></figure>
+  <figure><img class="motion" src="../assets/generated/sprites/tim-bot/previews/reading.gif" alt="Tim Bot cầm thẻ và nói"><img class="still" src="../assets/generated/sprites/tim-bot/curated/reading-frame-0.png" alt="Tim Bot cầm thẻ kết quả"><figcaption>Đọc kết quả<small>Chạy khi audio phát; chưa khớp môi theo âm vị.</small></figcaption></figure>
+</div>
+<p><a href="../index.html">Mở app</a> · <a href="design/tim-bot.md">Thiết kế và bằng chứng kiểm tra</a> · <a href="../assets/tim-bot/tim-bot-atlas.png">Sprite atlas</a></p>
+<p>API và audio trong kiểm tra browser được mock. Chưa nghe thử TTS thật hoặc kiểm tra điện thoại thật.</p>
+</html>

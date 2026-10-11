@@ -1,0 +1,9 @@
+docs
+.manual-test
+scripts
+test
+AGENTS.md
+.env
+.env.*
+.superpowers
+mobile

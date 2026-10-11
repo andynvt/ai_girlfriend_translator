@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="../assets/tim-bot/favicon.png">
+<title>Demo onboarding — Thông Dịch Viên Tình Yêu</title>
+<!-- ponytail: throwaway prototype to pick a direction; not wired to the app, no API, no storage. -->
+<style>
+  :root {
+    --background: #fff8f3; --surface: #fff; --primary: #b4235a; --primary-soft: #ffe6ee;
+    --lavender: #f0e9ff; --mint: #e6f6ed; --text: #291b23; --muted: #715363;
+    --border: #e6c8d6; --focus: #6744a3; --radius-card: 24px; --radius-input: 16px; --radius-pill: 999px;
+    --shadow: 0 8px 28px #71334c14; --font: system-ui, sans-serif; --hand: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font); font-size: 18px; line-height: 1.5; color: var(--text); min-height: 100vh;
+    background: radial-gradient(ellipse at top left, var(--primary-soft), transparent 55%), radial-gradient(ellipse at bottom right, var(--lavender), transparent 55%), var(--background); }
+  main { max-width: 1120px; margin: 0 auto; padding: 32px 16px 64px; }
+  header { text-align: center; margin-bottom: 24px; }
+  h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.2; margin: 12px 0 4px; letter-spacing: -.03em; }
+  h1 span { color: var(--primary); }
+  .badge { display: inline-block; background: var(--lavender); color: var(--focus); border-radius: var(--radius-pill); padding: 4px 12px; font-size: 14px; font-weight: 700; }
+  .muted { color: var(--muted); }
+  .hint { color: var(--muted); font-size: 14px; margin: 8px 0; }
+  button { font: inherit; font-weight: 600; border: 1px solid transparent; border-radius: var(--radius-pill); padding: 12px 18px; min-height: 48px; cursor: pointer; background: var(--lavender); color: var(--focus); transition: transform .15s, background .15s; }
+  button:hover { transform: translateY(-2px); }
+  .primary { background: var(--primary); color: #fff; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px; }
+  nav button { background: var(--surface); border-color: var(--border); color: var(--text); }
+  nav button[aria-pressed="true"] { background: var(--primary); color: #fff; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: 24px; box-shadow: var(--shadow); }
+  .pitch { display: grid; gap: 12px; margin-bottom: 24px; }
+  .pitch h2 { margin: 0; font-size: 22px; }
+  .pitch p { margin: 0; }
+  .tradeoffs { display: grid; gap: 8px; font-size: 15px; }
+  .tradeoffs div { border-radius: var(--radius-input); padding: 10px 14px; }
+  .tradeoffs .pro { background: var(--mint); } .tradeoffs .con { background: var(--primary-soft); }
+  @media (min-width: 760px) { .tradeoffs { grid-template-columns: 1fr 1fr; } }
+  .stage { max-width: 640px; margin: 0 auto; }
+  .result { margin-top: 16px; background: var(--mint); border-radius: var(--radius-input); padding: 16px; text-align: center; }
+  .result code { display: block; margin: 8px 0 12px; font-size: 14px; overflow-wrap: anywhere; }
+
+  /* Tim Bot sprite — same atlas and CSS contract as index.html. */
+  .tim-bot { --bot-size: 112px; --bot-row: 0; display: inline-block; flex-shrink: 0; width: var(--bot-size); height: var(--bot-size); background: url('../assets/tim-bot/tim-bot-atlas.png') 0 0 / calc(var(--bot-size) * 4) calc(var(--bot-size) * 5) no-repeat; transform-origin: center bottom; animation: bot-breathe 3.2s ease-in-out infinite; }
+  .tim-bot:not([data-state="idle"]) { background-position-y: calc(var(--bot-size) * var(--bot-row) * -1); animation: bot-frames 1s steps(4) 1, bot-breathe 3.2s ease-in-out infinite; }
+  .tim-bot[data-state="greet"] { animation-duration: .8s, 3.2s; }
+  .tim-bot[data-state="choose"] { --bot-row: 1; }
+  .tim-bot[data-state="input"] { --bot-row: 2; }
+  .tim-bot[data-state="waiting"] { --bot-row: 3; animation-iteration-count: infinite; }
+  @keyframes bot-breathe { 50% { transform: translateY(-2px) scale(1.015); } }
+  @keyframes bot-frames { to { background-position-x: calc(var(--bot-size) * -4); } }
+  .say { position: relative; margin: 0; padding: 12px 16px; border: 2px solid var(--primary); border-radius: 20px 20px 20px 4px; background: #fff; font-size: 16px; animation: pop .25s ease-out; }
+  @keyframes pop { from { opacity: 0; transform: translateY(6px); } }
+
+  /* ---------- A. Love letter ---------- */
+  .letter { position: relative; background: #fffdf8 repeating-linear-gradient(transparent 0 43px, #f1d9e3 43px 44px); border: 1px solid var(--border); border-radius: 6px 6px 18px 18px; padding: 28px 32px 32px; box-shadow: 0 14px 40px #71334c22; transform: rotate(-.6deg); transition: transform .7s cubic-bezier(.6,-.3,.7,1), opacity .7s; }
+  .letter::before { content: ""; position: absolute; left: 22px; top: 0; bottom: 0; border-left: 2px solid #f6b3c8; }
+  .letter-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .letter-body { font-family: var(--hand); font-size: 22px; line-height: 44px; padding-left: 8px; }
+  .letter-body p { margin: 0 0 4px; }
+  .pick { white-space: nowrap; }
+  .pick label { position: relative; display: inline-block; padding: 0 8px; cursor: pointer; color: var(--muted); font-style: italic; }
+  .pick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .pick input:checked + span { color: var(--primary); font-weight: 700; font-style: normal; }
+  .pick input:checked + span::after { content: ""; position: absolute; inset: 4px -2px; border: 2.5px solid var(--primary); border-radius: 52% 46% 55% 44% / 58% 50% 48% 54%; transform: rotate(-3deg); animation: circle .35s ease-out; pointer-events: none; }
+  .pick input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 8px; }
+  @keyframes circle { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+  .name-line { font: inherit; font-size: 24px; font-weight: 700; color: var(--primary); min-width: 7ch; width: 9ch; field-sizing: content; max-width: 100%; border: 0; border-bottom: 2px dashed var(--primary); background: transparent; padding: 0 6px; }
+  .name-line::placeholder { color: #c9a3b4; font-weight: 400; font-style: italic; }
+  .sign { text-align: right; font-style: italic; color: var(--muted); }
+  .letter-actions { display: flex; justify-content: center; margin-top: 16px; }
+  .seal { position: absolute; right: 28px; bottom: -26px; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-size: 34px; background: radial-gradient(circle at 35% 30%, #e0507f, #9c1748 70%); box-shadow: 0 6px 14px #7a1238aa, inset 0 0 0 6px #b4235a, inset 0 0 0 8px #d9547f; opacity: 0; transform: scale(2.4) rotate(-20deg); pointer-events: none; }
+  .letter.sealed .seal { opacity: 1; transform: scale(1) rotate(-8deg); transition: transform .3s cubic-bezier(.3,1.6,.5,1), opacity .15s; }
+  .letter.flying { transform: translateY(-120%) rotate(-12deg) scale(.4); opacity: 0; }
+
+  /* ---------- B. Chat interview ---------- */
+  .chat { border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--background); overflow: hidden; }
+  .chat-top { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .chat-top .tim-bot { --bot-size: 52px; }
+  .chat-top small { display: block; color: var(--safe, #237a4b); font-size: 13px; }
+  .log { height: 380px; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
+  .msg { max-width: 80%; margin: 0; padding: 10px 14px; border-radius: 20px; animation: pop .25s ease-out; overflow-wrap: anywhere; }
+  .msg.bot { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+  .msg.me { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.typing::before { content: "● ● ●"; letter-spacing: 2px; color: var(--muted); font-size: 12px; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .replies { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; padding: 0 16px 12px; min-height: 12px; }
+  .replies button { background: var(--surface); border: 2px solid var(--primary); color: var(--primary); animation: pop .25s ease-out; }
+  .bar { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--border); background: var(--surface); }
+  .bar input { flex: 1; min-width: 0; font: inherit; padding: 10px 16px; border-radius: var(--radius-pill); border: 2px solid var(--border); background: var(--background); }
+  .bar .mic { width: 48px; padding: 0; font-size: 20px; }
+
+  /* ---------- C. Swipe deck ---------- */
+  .progress { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+  .progress i { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+  .progress i.on { background: var(--primary); width: 28px; border-radius: 5px; transition: width .3s; }
+  .deck { position: relative; height: 360px; max-width: 360px; margin: 0 auto; }
+  .deck::before, .deck::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-card); background: var(--surface); border: 1px solid var(--border); }
+  .deck::before { transform: translateY(16px) scale(.92); opacity: .6; }
+  .deck::after { transform: translateY(8px) scale(.96); opacity: .85; }
+  .card { --l: 0; --r: 0; position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; text-align: center; border-radius: var(--radius-card); background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); touch-action: pan-y; user-select: none; cursor: grab; transition: transform .3s ease, opacity .3s; }
+  .card:active { cursor: grabbing; }
+  .card h3 { margin: 0; font-size: 22px; }
+  .stamp { position: absolute; top: 20px; padding: 4px 10px; border: 3px solid; border-radius: 10px; font-weight: 800; font-size: 18px; text-transform: uppercase; }
+  .stamp.left { left: 16px; color: var(--focus); transform: rotate(-12deg); opacity: var(--l); }
+  .stamp.right { right: 16px; color: var(--primary); transform: rotate(12deg); opacity: var(--r); }
+  .swipe-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 28px; }
+  .nametag { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; border-radius: var(--radius-card); overflow: hidden; background: var(--surface); border: 3px solid var(--primary); box-shadow: var(--shadow); transform: rotate(-2deg); transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+  .nametag.stuck { transform: rotate(3deg) scale(1.04); }
+  .tag-head { background: var(--primary); color: #fff; text-align: center; padding: 16px; }
+  .tag-head b { display: block; font-size: 34px; letter-spacing: .08em; line-height: 1.1; }
+  .tag-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 20px; }
+  .tag-body input { font: 700 30px var(--hand); text-align: center; color: var(--primary); border: 0; border-bottom: 3px dashed var(--border); background: transparent; padding: 8px; width: 100%; }
+
+  /* ---------- D. Decode form ---------- */
+  .decode { display: grid; gap: 24px; align-items: start; }
+  @media (min-width: 860px) { .decode { grid-template-columns: 1.3fr 1fr; } }
+  .phone { border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--background); padding: 16px; }
+  .from { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); font-weight: 800; }
+  .incoming { display: flex; gap: 8px; align-items: flex-end; }
+  .incoming textarea { flex: 1; font: inherit; resize: none; field-sizing: content; min-height: 56px; max-height: 220px; padding: 14px 16px; border-radius: 22px 22px 22px 4px; border: 2px solid var(--border); background: var(--surface); box-shadow: 0 2px 0 var(--border); }
+  .incoming textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px var(--primary-soft); }
+  .ghost { position: fixed; z-index: 10; margin: 0; padding: 14px 16px; border-radius: 22px 22px 22px 4px; border: 2px solid var(--primary); background: var(--surface); pointer-events: none; transform-origin: top left; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+  .chips button { min-height: 40px; padding: 6px 14px; font-size: 15px; background: var(--primary-soft); color: var(--primary); }
+  .chips button[aria-pressed="true"] { background: var(--primary); color: #fff; }
+  fieldset { border: 0; padding: 0; margin: 20px 0 0; }
+  legend { font-weight: 700; padding: 0; }
+  #otherD { width: 100%; margin-top: 10px; font: inherit; padding: 12px; border-radius: var(--radius-input); border: 2px solid var(--border); background: var(--background); }
+  .heat { margin-top: 20px; }
+  .heat label { font-weight: 700; display: block; }
+  .heat-row { display: flex; align-items: center; gap: 12px; }
+  .heat input { flex: 1; accent-color: var(--primary); height: 32px; }
+  .heat output { min-width: 140px; font-weight: 700; }
+  .heat output span { font-size: 30px; vertical-align: middle; margin-right: 4px; }
+  .heat-scale { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-right: 152px; }
+  #goD { width: 100%; margin-top: 20px; font-size: 18px; }
+  .receiver { text-align: center; }
+  .receiver pre { text-align: left; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; background: var(--lavender); border-radius: var(--radius-input); padding: 12px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="badge">Bản demo nháp · chỉ để chọn hướng</span>
+    <h1>3 hướng onboarding cho <span>Thông Dịch Viên Tình Yêu</span></h1>
+    <p class="muted">Bấm thử từng hướng. Không gọi API, không lưu gì cả. Tab cuối là form giải mã mới.</p>
+  </header>
+
+  <nav aria-label="Chọn hướng">
+    <button type="button" data-tab="cA" aria-pressed="true">A · Lá thư điền chỗ trống</button>
+    <button type="button" data-tab="cB" aria-pressed="false">B · Tim Bot phỏng vấn</button>
+    <button type="button" data-tab="cC" aria-pressed="false">C · Quẹt thẻ</button>
+    <button type="button" data-tab="cD" aria-pressed="false">✨ Form giải mã</button>
+  </nav>
+
+  <!-- ===== A ===== -->
+  <section class="panel" id="cA">
+    <div class="pitch">
+      <h2>A · Lá thư điền chỗ trống</h2>
+      <p class="muted">Một tấm thiệp viết tay. Khoanh tròn lựa chọn, ghi tên lên dòng kẻ. Câu văn chính là phần xem lại.</p>
+      <div class="tradeoffs"><div class="pro">👍 Chỉ một màn hình, bỏ được bước review. Câu chữ tự đổi theo ngôn ngữ.</div><div class="con">🤔 Nhiều chữ hơn trên màn nhỏ. Chỉ có 3 trường; thêm trường là câu văn dài ra.</div></div>
+    </div>
+    <div class="stage">
+      <div class="letter" id="letter">
+        <div class="letter-head"><span class="tim-bot" id="botA" data-state="greet" aria-hidden="true"></span><p class="say" id="sayA" aria-live="polite"></p></div>
+        <form class="letter-body" id="formA">
+          <p data-vi="Thân gửi Tim Bot," data-en="Dear Tim Bot,"></p>
+          <p><span data-vi="Mình nói" data-en="I speak"></span>
+            <span class="pick" role="radiogroup" aria-label="Ngôn ngữ">
+              <label><input type="radio" name="langA" value="vi" checked><span>Tiếng Việt</span></label>/<label><input type="radio" name="langA" value="en"><span>English</span></label></span>.</p>
+          <p><span data-vi="Mình muốn hiểu hơn về" data-en="I want to understand my"></span>
+            <span class="pick" role="radiogroup" aria-label="Đối tượng">
+              <label><input type="radio" name="dirA" value="gf" required><span data-vi="bạn gái" data-en="girlfriend"></span></label>/<label><input type="radio" name="dirA" value="bf"><span data-vi="bạn trai" data-en="boyfriend"></span></label></span>
+            <span data-vi="của mình," data-en="better —"></span></p>
+          <p><label for="nameA" data-vi="người ấy tên là" data-en="their name is"></label>
+            <input class="name-line" id="nameA" maxlength="60" required pattern=".*\S.*" autocomplete="off">.</p>
+          <p data-vi="Nhờ bạn giải mã giúp mình nha!" data-en="Please help me decode them!"></p>
+          <p class="sign" data-vi="— Một trái tim đang hơi rối 💗" data-en="— A slightly confused heart 💗"></p>
+          <div class="letter-actions"><button class="primary" data-vi="Đóng dấu & gửi 💌" data-en="Seal & send 💌"></button></div>
+        </form>
+        <div class="seal" aria-hidden="true">💗</div>
+      </div>
+      <div class="result" id="resA" hidden><b>Lá thư đã gửi tới Tim Bot! 💌</b><code></code><button type="button" id="redoA">Viết lại</button></div>
+    </div>
+  </section>
+
+  <!-- ===== B ===== -->
+  <section class="panel" id="cB" hidden>
+    <div class="pitch">
+      <h2>B · Tim Bot phỏng vấn</h2>
+      <p class="muted">Tim Bot hỏi từng câu bằng tin nhắn, bạn trả lời bằng chip. Ngôn ngữ chọn bằng cách bấm vào lời chào.</p>
+      <div class="tradeoffs"><div class="pro">👍 Sống động nhất, hợp app chat. Nút 🎤 nằm sẵn trên thanh trả lời.</div><div class="con">🤔 Mất nhiều bước hơn. Sửa một câu là phải hỏi lại. Onboarding kiểu chat giờ khá phổ biến.</div></div>
+    </div>
+    <div class="stage">
+      <div class="chat">
+        <div class="chat-top"><span class="tim-bot" id="botB" data-state="greet" aria-hidden="true"></span><div><b>Tim Bot</b><small>● đang hóng chuyện</small></div></div>
+        <div class="log" id="logB" aria-live="polite"></div>
+        <div class="replies" id="optsB"></div>
+        <form class="bar" id="barB">
+          <label for="nameB" class="sr-only">Tên người ấy</label>
+          <input id="nameB" maxlength="60" autocomplete="off" placeholder="Nhập tin nhắn…" disabled>
+          <button type="button" class="mic" title="Nói (chưa bật trong demo)" aria-label="Nói" disabled>🎤</button>
+          <button class="primary" id="sendB" disabled>Gửi</button>
+        </form>
+      </div>
+      <div class="result" id="resB" hidden><b>Xong, vào app thôi! 🚀</b><code></code><button type="button" id="redoB">Phỏng vấn lại</button></div>
+    </div>
+  </section>
+
+  <!-- ===== C ===== -->
+  <section class="panel" id="cC" hidden>
+    <div class="pitch">
+      <h2>C · Quẹt thẻ</h2>
+      <p class="muted">Quẹt trái/phải để chọn, giống app hẹn hò. Bước cuối là dán bảng tên “XIN CHÀO”.</p>
+      <div class="tradeoffs"><div class="pro">👍 Vui tay trên điện thoại, nhanh, dễ nhớ.</div><div class="con">🤔 Quẹt cho câu chỉ có 2 lựa chọn hơi gượng. Trên desktop phải dùng nút/phím. Quẹt nhầm là khó quay lại.</div></div>
+    </div>
+    <div class="stage">
+      <div class="progress" id="progC" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="deck" id="deckC"></div>
+      <div class="swipe-buttons" id="btnsC"><button type="button" id="leftC"></button><button type="button" id="rightC" class="primary"></button></div>
+      <div class="result" id="resC" hidden><b>Bảng tên đã dán! 🏷️</b><code></code><button type="button" id="redoC">Quẹt lại</button></div>
+    </div>
+  </section>
+
+  <!-- ===== D ===== -->
+  <section class="panel" id="cD" hidden>
+    <div class="pitch">
+      <h2>✨ Form giải mã mới</h2>
+      <p class="muted">Ghép được với cả A, B, C. Ô lời nhắn là bong bóng tin nhắn đến. Bối cảnh chọn bằng chip và thanh nhiệt độ. Tất cả được ghép thành chuỗi <code>context</code> như hiện tại, nên <b>không đổi API</b>.</p>
+    </div>
+    <div class="decode">
+      <form id="formD">
+        <div class="phone">
+          <div class="from"><span class="avatar" id="avatarD" aria-hidden="true"></span><div><b id="nameD"></b><div class="hint" style="margin:0" id="fromD"></div></div></div>
+          <label for="msgD" class="sr-only" id="msgLabelD"></label>
+          <div class="incoming" id="bubbleD"><textarea id="msgD" maxlength="500" rows="1"></textarea></div>
+          <div class="chips" id="quickD" aria-label="Câu quen thuộc"></div>
+        </div>
+        <fieldset>
+          <legend>Chuyện gì vừa xảy ra? <span class="muted" style="font-weight:400">— chọn nhiều cũng được</span></legend>
+          <div class="chips" id="scenD"></div>
+          <label for="otherD" class="sr-only">Chuyện khác</label>
+          <textarea id="otherD" rows="2" maxlength="1000" placeholder="Kể thêm một chút…" hidden></textarea>
+        </fieldset>
+        <div class="heat">
+          <label for="heatD">Không khí cuộc trò chuyện</label>
+          <div class="heat-row"><input type="range" id="heatD" min="0" max="4" value="1" aria-describedby="heatOut"><output id="heatOut" for="heatD"></output></div>
+          <div class="heat-scale" aria-hidden="true"><span>🧊 Lạnh</span><span>🌋 Phun trào</span></div>
+        </div>
+        <button class="primary" id="goD">Gửi cho Tim Bot giải mã 💌</button>
+        <p class="hint" id="statusD" role="status"></p>
+      </form>
+      <div class="phone receiver">
+        <span class="tim-bot" id="botD" data-state="input" aria-hidden="true"></span>
+        <h3 id="recvTitle" style="margin:8px 0">Tim Bot đang chờ thư</h3>
+        <pre id="payloadD" hidden></pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, reduce ? 0 : ms));
+  const el = (tag, props = {}) => Object.assign(document.createElement(tag), props);
+  function setBot(bot, state) { bot.style.animation = 'none'; bot.dataset.state = state; void bot.offsetWidth; bot.style.animation = ''; }
+  let profile = { language: 'vi', direction: 'gf', partnerName: 'Gà' };
+  function finish(box, p) { profile = p; box.hidden = false; box.querySelector('code').textContent = JSON.stringify(p); renderD(); }
+
+  // ---------- Tabs ----------
+  let startedB = false;
+  document.querySelectorAll('[data-tab]').forEach(tab => tab.onclick = () => {
+    document.querySelectorAll('[data-tab]').forEach(t => {
+      t.setAttribute('aria-pressed', t === tab);
+      $(t.dataset.tab).hidden = t !== tab;
+    });
+    if (tab.dataset.tab === 'cB' && !startedB) { startedB = true; runB(); }
+  });
+
+  // ---------- A. Love letter ----------
+  const formA = $('formA'), letter = $('letter'), botA = $('botA');
+  const langA = () => formA.elements.langA.value;
+  const tA = (vi, en) => langA() === 'en' ? en : vi;
+  function sayA(text, state) { $('sayA').textContent = text; $('sayA').style.animation = 'none'; void $('sayA').offsetWidth; $('sayA').style.animation = ''; if (state) setBot(botA, state); }
+  function applyA() {
+    letter.querySelectorAll('[data-vi]').forEach(n => n.textContent = n.dataset[langA()]);
+    $('nameA').placeholder = tA('tên người ấy', 'their name');
+  }
+  formA.addEventListener('change', e => {
+    if (e.target.name === 'langA') { applyA(); sayA(tA('Ok, mình viết bằng tiếng Việt nha 🇻🇳', 'Got it — English it is 🇬🇧'), 'choose'); }
+    if (e.target.name === 'dirA') sayA(e.target.value === 'gf'
+      ? tA('Bạn gái à? Mình sẽ soi kỹ từng chữ “không sao” 🫣', 'A girlfriend? I’ll read every “I’m fine” very carefully 🫣')
+      : tA('Bạn trai à? Để mình dịch mấy chữ “ừ” cụt lủn 😏', 'A boyfriend? Let me decode those one-word “k”s 😏'), 'choose');
+    if (e.target.id === 'nameA' && e.target.value.trim()) sayA(tA(`“${e.target.value.trim()}” à? Tên nghe thương ghê 💕`, `“${e.target.value.trim()}”? What a lovely name 💕`), 'greet');
+  });
+  $('nameA').onfocus = () => setBot(botA, 'input');
+  formA.onsubmit = async e => {
+    e.preventDefault();
+    sayA(tA('Đóng dấu nè… cộp! 💗', 'Sealing it… stamp! 💗'), 'greet');
+    letter.classList.add('sealed');
+    await wait(900);
+    letter.classList.add('flying');
+    await wait(700);
+    letter.hidden = true;
+    finish($('resA'), { language: langA(), direction: formA.elements.dirA.value, partnerName: $('nameA').value.trim() });
+    $('redoA').focus();
+  };
+  $('redoA').onclick = () => {
+    formA.reset(); letter.className = 'letter'; letter.hidden = false; $('resA').hidden = true; applyA();
+    sayA('Viết giúp mình lá thư làm quen nhé ✍️ Khoanh tròn và điền tên vào chỗ trống.', 'greet');
+  };
+  applyA(); sayA('Viết giúp mình lá thư làm quen nhé ✍️ Khoanh tròn và điền tên vào chỗ trống.');
+
+  // ---------- B. Chat interview ----------
+  const logB = $('logB'), optsB = $('optsB'), barB = $('barB'), nameB = $('nameB'), botB = $('botB');
+  let langB = 'vi';
+  const tB = (vi, en) => langB === 'en' ? en : vi;
+  function bubble(text, who) { const p = el('p', { className: `msg ${who}`, textContent: text }); logB.append(p); logB.scrollTop = logB.scrollHeight; return p; }
+  async function bot(text, state = 'input') {
+    const dots = bubble('', 'bot typing'); dots.setAttribute('aria-hidden', 'true');
+    setBot(botB, state);
+    await wait(650 + Math.min(text.length * 12, 700));
+    dots.remove(); bubble(text, 'bot');
+  }
+  function ask(options) {
+    return new Promise(resolve => {
+      optsB.replaceChildren(...options.map(([value, label]) => el('button', { type: 'button', textContent: label, onclick: () => { optsB.replaceChildren(); bubble(label, 'me'); resolve(value); } })));
+      optsB.firstChild.focus({ preventScroll: true });
+    });
+  }
+  function askName() {
+    return new Promise(resolve => {
+      nameB.disabled = $('sendB').disabled = false; nameB.placeholder = tB('Tên người ấy là…', 'Their name is…'); nameB.focus({ preventScroll: true });
+      barB.onsubmit = e => {
+        e.preventDefault();
+        const name = nameB.value.trim(); if (!name) return;
+        nameB.value = ''; nameB.disabled = $('sendB').disabled = true; nameB.placeholder = 'Nhập tin nhắn…';
+        bubble(name, 'me'); resolve(name);
+      };
+    });
+  }
+  async function runB() {
+    logB.replaceChildren(); $('resB').hidden = true; langB = 'vi';
+    await bot('Chào bạn! Mình là Tim Bot, thông dịch viên tình yêu 💘', 'greet');
+    await bot('Trước tiên, lời chào nào nghe quen tai với bạn nhất?');
+    langB = await ask([['vi', 'Xin chào 👋'], ['en', 'Hello 👋']]);
+    await bot(tB('Tuyệt! Vậy mình đọc vị ai giúp bạn đây?', 'Great! So who should I decode for you?'), 'choose');
+    const direction = await ask([['gf', tB('💁‍♀️ Bạn gái', '💁‍♀️ My girlfriend')], ['bf', tB('💁‍♂️ Bạn trai', '💁‍♂️ My boyfriend')]]);
+    await bot(direction === 'gf' ? tB('Ồ, nàng tên gì thế? 👀', 'Ooh, what’s her name? 👀') : tB('Ồ, chàng tên gì thế? 👀', 'Ooh, what’s his name? 👀'));
+    const partnerName = await askName();
+    await bot(tB(`${partnerName}… nghe là thấy thương rồi 😍`, `${partnerName}… sounds lovely already 😍`), 'greet');
+    const who = direction === 'gf' ? tB('bạn gái', 'girlfriend') : tB('bạn trai', 'boyfriend');
+    await bot(tB(`Chốt nhé: tiếng Việt, giải mã ${who} tên ${partnerName}. Chuẩn chưa?`, `So: English, decoding your ${who} ${partnerName}. Right?`));
+    const ok = await ask([['ok', tB('Chuẩn, bắt đầu thôi! 🚀', 'Yep, let’s go! 🚀')], ['redo', tB('Sửa lại ✏️', 'Start over ✏️')]]);
+    if (ok === 'redo') return runB();
+    setBot(botB, 'greet');
+    finish($('resB'), { language: langB, direction, partnerName });
+  }
+  $('redoB').onclick = runB;
+
+  // ---------- C. Swipe deck ----------
+  const deckC = $('deckC');
+  const cardsC = [
+    { key: 'language', q: 'Bạn muốn dùng ngôn ngữ nào?', opts: [['vi', '🇻🇳 Tiếng Việt'], ['en', '🇬🇧 English']] },
+    { key: 'direction', q: 'Mình đọc vị ai giúp bạn?', opts: [['gf', '💁‍♀️ Bạn gái'], ['bf', '💁‍♂️ Bạn trai']] },
+  ];
+  let stepC = 0, pC = {};
+  function renderC() {
+    deckC.replaceChildren();
+    $('progC').querySelectorAll('i').forEach((dot, i) => dot.className = i === stepC ? 'on' : '');
+    $('btnsC').hidden = stepC >= cardsC.length;
+    if (stepC < cardsC.length) return swipeCard(cardsC[stepC]);
+    const en = pC.language === 'en';
+    const form = el('form', { className: 'nametag' });
+    form.innerHTML = `<div class="tag-head"><b>${en ? 'HELLO' : 'XIN CHÀO'}</b>${en ? 'my person is called' : 'người ấy của mình tên là'}</div>
+      <div class="tag-body"><label for="nameC" class="sr-only">Tên người ấy</label><input id="nameC" maxlength="60" required pattern=".*\\S.*" autocomplete="off" placeholder="${en ? 'Emma' : 'Gà'}">
+      <button class="primary">${en ? 'Stick it on ✓' : 'Dán bảng tên ✓'}</button></div>`;
+    form.onsubmit = async e => {
+      e.preventDefault();
+      form.classList.add('stuck');
+      await wait(400);
+      finish($('resC'), { ...pC, partnerName: $('nameC').value.trim() });
+      $('redoC').focus();
+    };
+    deckC.append(form);
+    $('nameC').focus({ preventScroll: true });
+  }
+  function swipeCard(c) {
+    const card = el('div', { className: 'card', tabIndex: 0 });
+    card.setAttribute('role', 'group');
+    card.setAttribute('aria-label', `${c.q} Dùng phím mũi tên trái hoặc phải để chọn.`);
+    card.innerHTML = `<span class="stamp left"></span><span class="stamp right"></span><span class="tim-bot" data-state="choose" aria-hidden="true"></span><h3></h3><p class="hint"></p>`;
+    card.querySelector('.left').textContent = c.opts[0][1];
+    card.querySelector('.right').textContent = c.opts[1][1];
+    card.querySelector('h3').textContent = c.q;
+    card.querySelector('.hint').textContent = `← ${c.opts[0][1]}   ·   ${c.opts[1][1]} →`;
+    $('leftC').textContent = `← ${c.opts[0][1]}`;
+    $('rightC').textContent = `${c.opts[1][1]} →`;
+    const choose = async i => {
+      $('leftC').onclick = $('rightC').onclick = card.onkeydown = null;
+      pC[c.key] = c.opts[i][0];
+      card.style.transform = `translateX(${i ? 150 : -150}%) rotate(${i ? 24 : -24}deg)`;
+      card.style.opacity = 0;
+      await wait(300);
+      stepC++; renderC();
+    };
+    let startX = 0, dx = 0, dragging = false;
+    card.onpointerdown = e => { dragging = true; startX = e.clientX; dx = 0; card.setPointerCapture(e.pointerId); card.style.transition = 'none'; };
+    card.onpointermove = e => {
+      if (!dragging) return;
+      dx = e.clientX - startX;
+      card.style.transform = `translateX(${dx}px) rotate(${dx / 14}deg)`;
+      card.style.setProperty('--l', Math.min(1, Math.max(0, -dx) / 90));
+      card.style.setProperty('--r', Math.min(1, Math.max(0, dx) / 90));
+    };
+    card.onpointerup = card.onpointercancel = () => {
+      if (!dragging) return;
+      dragging = false; card.style.transition = '';
+      if (Math.abs(dx) > 90) return choose(dx < 0 ? 0 : 1);
+      card.style.transform = ''; card.style.setProperty('--l', 0); card.style.setProperty('--r', 0);
+    };
+    card.onkeydown = e => { if (e.key === 'ArrowLeft') choose(0); if (e.key === 'ArrowRight') choose(1); };
+    $('leftC').onclick = () => choose(0);
+    $('rightC').onclick = () => choose(1);
+    deckC.append(card);
+  }
+  $('redoC').onclick = () => { stepC = 0; pC = {}; $('resC').hidden = true; renderC(); };
+  renderC();
+
+  // ---------- D. Decode form ----------
+  const heatD = [['🧊', 'Lạnh tanh'], ['😐', 'Bình thường'], ['😤', 'Hơi căng'], ['🔥', 'Nóng rồi đó'], ['🌋', 'Sắp phun trào']];
+  const scenarios = ['⏰ Quên hẹn', '🐢 Rep chậm', '📸 Like ảnh người khác', '🍻 Đi chơi về muộn', '🎁 Quên kỷ niệm', '📵 Không nghe máy', '✍️ Chuyện khác'];
+  function toggle(b) { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'); }
+  $('scenD').replaceChildren(...scenarios.map((s, i) => el('button', { type: 'button', textContent: s, onclick: e => {
+    toggle(e.currentTarget);
+    if (i === scenarios.length - 1) { $('otherD').hidden = !$('otherD').hidden; if (!$('otherD').hidden) $('otherD').focus(); }
+  } })));
+  $('scenD').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  function renderHeat() { const [emoji, label] = heatD[$('heatD').value]; $('heatOut').innerHTML = `<span aria-hidden="true">${emoji}</span>${label}`; $('heatD').setAttribute('aria-valuetext', label); }
+  $('heatD').oninput = renderHeat; renderHeat();
+  function renderD() {
+    const n = profile.partnerName;
+    $('avatarD').textContent = [...n][0].toUpperCase();
+    $('nameD').textContent = n;
+    $('fromD').textContent = 'vừa nhắn cho bạn · bây giờ';
+    $('msgD').placeholder = `Dán y nguyên tin nhắn của ${n} vào đây…`;
+    $('msgLabelD').textContent = `Tin nhắn của ${n}`;
+    const quick = profile.direction === 'bf' ? ['Ừ', 'Tùy em', 'Anh bận chút'] : ['Em không sao đâu', 'Tùy anh', 'Anh đi đi, em không giận'];
+    $('quickD').replaceChildren(...quick.map(q => el('button', { type: 'button', textContent: q, onclick: () => { $('msgD').value = q; $('msgD').focus(); } })));
+  }
+  $('msgD').onfocus = () => setBot($('botD'), 'input');
+  $('formD').onsubmit = async e => {
+    e.preventDefault();
+    const text = $('msgD').value.trim();
+    if (!text) { $('statusD').textContent = `Dán tin nhắn của ${profile.partnerName} trước nha 💌`; $('msgD').focus(); return; }
+    $('statusD').textContent = '';
+    const from = $('msgD').getBoundingClientRect(), to = $('botD').getBoundingClientRect();
+    const ghost = el('p', { className: 'ghost', textContent: text });
+    Object.assign(ghost.style, { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px` });
+    document.body.append(ghost);
+    await ghost.animate([
+      { transform: 'none', opacity: 1 },
+      { transform: `translate(${to.left + to.width / 2 - from.left}px, ${to.top + to.height / 2 - from.top}px) scale(.12) rotate(20deg)`, opacity: .3 },
+    ], { duration: reduce ? 0 : 700, easing: 'cubic-bezier(.5,0,.7,.4)' }).finished;
+    ghost.remove();
+    setBot($('botD'), 'waiting');
+    $('recvTitle').textContent = 'Đang phân tích tâm lý…';
+    const picked = [...$('scenD').querySelectorAll('[aria-pressed="true"]')].map(b => b.textContent.replace(/^\S+\s/, '')).filter(s => s !== 'Chuyện khác');
+    const context = [picked.length && `Chuyện vừa xảy ra: ${picked.join(', ')}`, `Không khí: ${heatD[$('heatD').value][1].toLowerCase()}`, !$('otherD').hidden && $('otherD').value.trim()].filter(Boolean).join('. ');
+    $('payloadD').hidden = false;
+    $('payloadD').textContent = `Dữ liệu gửi /api/translate (giữ nguyên API):\n${JSON.stringify({ text, context, direction: profile.direction, language: profile.language, partnerName: profile.partnerName }, null, 2)}`;
+    await wait(1800);
+    setBot($('botD'), 'greet');
+    $('recvTitle').textContent = 'Demo dừng ở đây, không gọi API thật 🙂';
+  };
+  renderD();
+</script>
+</body>
+</html>

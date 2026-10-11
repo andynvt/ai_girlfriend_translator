@@ -3,277 +3,164 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/tim-bot/favicon.png">
 <title>Thông Dịch Viên Tình Yêu 💘</title>
-<style>
-  :root {
-    --background: #fff8f3; --surface: #fff; --primary: #b4235a; --primary-soft: #ffe6ee;
-    --lavender: #f0e9ff; --mint: #e6f6ed; --text: #291b23; --muted: #715363;
-    --border: #e6c8d6; --focus: #6744a3; --safe: #237a4b; --warning: #946000; --danger: #b42332;
-    --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
-    --radius-card: 24px; --radius-input: 16px; --radius-pill: 999px;
-    --shadow: 0 8px 28px #71334c0c; --font: system-ui, sans-serif;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: var(--font); font-size: 18px; line-height: 1.5; background: radial-gradient(ellipse at top left, var(--primary-soft), transparent 55%), radial-gradient(ellipse at bottom right, var(--lavender), transparent 55%), var(--background); color: var(--text); min-height: 100vh; }
-  main { max-width: 1120px; margin: 0 auto; padding: var(--space-8) var(--space-4); }
-  header { text-align: center; margin-bottom: var(--space-8); }
-  .badge { display: inline-block; background: var(--lavender); color: var(--focus); border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3); font-size: 14px; font-weight: 700; }
-  h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.2; margin: var(--space-4) 0 var(--space-2); letter-spacing: -.03em; }
-  h1 span { color: var(--primary); }
-  .sub { margin: 0; color: var(--muted); }
-  .workspace { display: grid; gap: var(--space-6); align-items: start; }
-  .panel { min-width: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: var(--space-6); box-shadow: var(--shadow); }
-  h2 { font-size: 22px; margin: 0 0 var(--space-4); }
-  .toggle { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-6); }
-  button { font: inherit; font-weight: 600; border: 1px solid transparent; border-radius: var(--radius-pill); padding: var(--space-3) var(--space-4); min-height: 48px; cursor: pointer; transition: background .15s, transform .15s; }
-  button:hover:not(:disabled) { transform: translateY(-2px); }
-  button:active:not(:disabled) { transform: translateY(0); }
-  button:disabled { opacity: .65; cursor: wait; }
-  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
-  .toggle button { background: var(--lavender); color: var(--focus); font-size: 16px; }
-  .toggle button[aria-pressed="true"] { background: var(--primary); color: var(--surface); }
-  label { display: block; font-weight: 700; margin-bottom: var(--space-2); }
-  textarea { width: 100%; font: inherit; padding: var(--space-4); border-radius: var(--radius-input); border: 2px solid var(--border); background: var(--background); color: var(--text); resize: vertical; min-height: 140px; }
-  textarea::placeholder { color: var(--muted); }
-  .hint { color: var(--muted); font-size: 14px; margin: var(--space-2) 0; }
-  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0 var(--space-6); }
-  .chips button { background: var(--primary-soft); color: var(--primary); padding: var(--space-2) var(--space-3); font-size: 14px; }
-  .row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .row .icon { background: var(--lavender); color: var(--focus); font-size: 22px; width: 52px; padding: var(--space-2); }
-  #go { flex: 1; background: var(--primary); color: var(--surface); font-size: 18px; }
-  #attachment { margin-bottom: var(--space-4); }
-  #preview { max-width: 100%; max-height: 180px; border-radius: var(--radius-input); display: block; }
-  #removeImage { background: var(--primary-soft); color: var(--primary); margin-top: var(--space-2); font-size: 14px; }
-  .empty { text-align: center; padding: var(--space-8) 0; }
-  .mascot { display: inline-grid; place-items: center; position: relative; width: 112px; height: 112px; background: var(--primary-soft); border-radius: 40% 45% 38% 48%; margin-bottom: var(--space-4); transform: rotate(-6deg); }
-  .heart { font-size: 88px; color: var(--primary); line-height: 1; }
-  .face { position: absolute; top: 46px; left: 0; width: 100%; text-align: center; font-size: 20px; font-weight: 800; color: white; }
-  .empty h2 { margin-bottom: var(--space-2); }
-  .empty p { color: var(--muted); margin: 0 auto; max-width: 30ch; }
-  .card { border-radius: var(--radius-card); padding: var(--space-4); margin-top: var(--space-4); background: var(--lavender); }
-  .card h3 { margin: 0 0 var(--space-2); font-size: 15px; color: var(--muted); }
-  .card p { margin: 0; font-size: 20px; line-height: 1.55; overflow-wrap: anywhere; white-space: pre-line; }
-  .bubble { border-bottom-left-radius: var(--space-1); }
-  .reply-card { background: var(--mint); margin-left: var(--space-4); border-bottom-right-radius: var(--space-1); border-bottom-left-radius: var(--radius-card); }
-  .avoid-card { background: var(--primary-soft); }
-  .danger-card { margin-top: 0; background: var(--background); }
-  .danger-heading { display: flex; align-items: center; gap: var(--space-4); }
-  .danger-heading .mascot { flex-shrink: 0; width: 72px; height: 72px; margin: 0; }
-  .danger-heading .heart { font-size: 60px; }
-  .danger-heading .face { top: 30px; font-size: 14px; }
-  .danger-heading h3 { margin: 0; }
-  .big { font-size: 36px; font-weight: 800; line-height: 1.2; }
-  #dangerLabel { font-size: 16px; font-weight: 700; }
-  #out { --level-color: var(--safe); }
-  #dangerLabel, .big { color: var(--level-color); }
-  .meter { height: 16px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; margin-top: var(--space-4); }
-  .meter div { height: 100%; width: 0; background: var(--level-color); border-radius: inherit; transition: width .6s ease; }
-  #out:not([hidden]) { animation: appear .25s ease-out; }
-  .loading { text-align: center; padding: var(--space-8) 0; }
-  .loading .mascot { animation: beat .6s ease-in-out infinite; }
-  .loading .lens { position: absolute; font-size: 40px; top: -6px; animation: scan 1.6s ease-in-out infinite; }
-  .loading .scan { height: 8px; max-width: 240px; margin: var(--space-4) auto; background: var(--primary-soft); border-radius: var(--radius-pill); overflow: hidden; }
-  .loading .scan div { height: 100%; width: 40%; background: var(--primary); border-radius: inherit; animation: sweep 1.1s ease-in-out infinite; }
-  #loadingLine { color: var(--muted); min-height: 1.5em; animation: appear .3s ease-out; }
-  @keyframes beat { 0%, 100% { transform: rotate(-6deg) scale(1); } 30% { transform: rotate(-6deg) scale(1.12); } 60% { transform: rotate(-6deg) scale(.96); } }
-  @keyframes scan { 0%, 100% { left: -24px; } 50% { left: 96px; } }
-  @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
-  #speak { width: 100%; margin-top: var(--space-4); background: var(--focus); color: var(--surface); }
-  .err { color: var(--danger); background: var(--primary-soft); border-radius: var(--radius-input); padding: var(--space-3); margin-top: var(--space-4); }
-  .footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: var(--space-6); }
-  [hidden] { display: none !important; }
-  @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  @media (min-width: 860px) { .workspace { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 400px) { .panel { padding: var(--space-4); } .toggle button { padding: var(--space-2); font-size: 14px; } #go { flex-basis: 100%; } }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-</style>
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/onboarding.css">
 </head>
 <body>
 <main>
+  <div class="flow-switch">
+    <button id="flowToggle" type="button" popovertarget="flowMenu" aria-label="Đổi kiểu onboarding" data-i18n-aria-label="Đổi kiểu onboarding">🎨 <span id="flowCurrent"></span></button>
+    <div id="flowMenu" popover>
+      <button type="button" data-flow="wizard" data-i18n="Từng bước">Từng bước</button>
+      <button type="button" data-flow="letter" data-i18n="Lá thư">Lá thư</button>
+      <button type="button" data-flow="chat" data-i18n="Phỏng vấn">Phỏng vấn</button>
+      <button type="button" data-flow="swipe" data-i18n="Quẹt thẻ">Quẹt thẻ</button>
+    </div>
+  </div>
   <header>
-    <div class="badge">Một chút AI, một chút thấu hiểu ✨</div>
-    <h1>Thông Dịch Viên <span>Tình Yêu</span></h1>
-    <p class="sub">Đọc lời người ấy. Gỡ rối trái tim bạn.</p>
+    <div class="badge" data-i18n="Một chút AI, một chút thấu hiểu ✨">Một chút AI, một chút thấu hiểu ✨</div>
+    <h1><span data-i18n="Thông Dịch Viên" style="color:inherit">Thông Dịch Viên</span> <span data-i18n="Tình Yêu">Tình Yêu</span></h1>
+    <p class="sub" data-i18n="Đọc lời người ấy. Gỡ rối trái tim bạn.">Đọc lời người ấy. Gỡ rối trái tim bạn.</p>
+    <button id="settings" hidden data-i18n="Làm lại từ đầu">Làm lại từ đầu</button>
   </header>
-  <div class="workspace">
-    <section class="panel" aria-labelledby="inputTitle">
-      <h2 id="inputTitle">💌 Người ấy nói gì?</h2>
-      <div class="toggle" role="group" aria-label="Chọn người cần giải mã">
-        <button data-dir="gf" aria-pressed="true">💁‍♀️ Bạn gái</button>
-        <button data-dir="bf" aria-pressed="false">🙋‍♂️ Bạn trai</button>
+  <section class="panel onboarding" id="onboarding" aria-labelledby="onboardingTitle">
+    <h2 id="onboardingTitle" tabindex="-1" data-i18n="Chào bạn, làm quen một chút nhé 💘">Chào bạn, làm quen một chút nhé 💘</h2>
+    <div class="bot-intro"><span id="setupBot" class="tim-bot" data-state="greet" aria-hidden="true"></span><p id="setupBubble" class="bot-bubble" aria-live="polite"></p></div>
+    <div class="setup-progress" id="setupProgress"></div>
+    <form id="setupForm" novalidate>
+      <div id="languageStep">
+      <label for="setupLanguage" data-i18n="1. Ngôn ngữ giao diện và kết quả">1. Ngôn ngữ giao diện và kết quả</label>
+      <select id="setupLanguage" required><option value="vi">Tiếng Việt</option><option value="en">English</option></select>
+      </div><div id="directionStep" hidden>
+      <label id="directionLabel" data-i18n="2. Bạn muốn giải mã ai?">2. Bạn muốn giải mã ai?</label>
+      <select id="setupDirection" required hidden><option value="" data-i18n="Chọn người ấy">Chọn người ấy</option><option value="gf" data-i18n="Bạn gái">Bạn gái</option><option value="bf" data-i18n="Bạn trai">Bạn trai</option></select>
+      <div class="partner-options" role="group" aria-labelledby="directionLabel"><button id="chooseGf" type="button" aria-pressed="false" data-i18n="Bạn gái">Bạn gái</button><button id="chooseBf" type="button" aria-pressed="false" data-i18n="Bạn trai">Bạn trai</button></div>
+      </div><div id="nameStep" hidden>
+      <label for="setupName" data-i18n="3. Tên người ấy">3. Tên người ấy</label>
+      <input id="setupName" type="text" maxlength="60" required autocomplete="off" aria-describedby="nameHint">
+      <p class="hint" id="nameHint" data-i18n="Tối đa 60 ký tự. Chọn Làm lại từ đầu để thiết lập lại.">Tối đa 60 ký tự. Chọn Làm lại từ đầu để thiết lập lại.</p>
       </div>
-      <label for="text">Lời nhắn cần giải mã</label>
+      <button id="setupBack" type="button" hidden data-i18n="Quay lại">Quay lại</button>
+      <div class="row"><button type="button" id="setupNext"></button><button type="submit" id="reviewSetup" hidden data-i18n="Xem lại thiết lập">Xem lại thiết lập</button></div>
+    </form>
+    <form id="letterFlow" class="letter" novalidate hidden>
+      <p data-i18n="Thân gửi Tim,">Thân gửi Tim,</p>
+      <p><span data-i18n="Mình nói">Mình nói</span>
+        <span class="pick" role="radiogroup" aria-label="Ngôn ngữ" data-i18n-aria-label="Ngôn ngữ"><label><input type="radio" name="letterLanguage" value="vi"><span>Tiếng Việt</span></label>/<label><input type="radio" name="letterLanguage" value="en"><span>English</span></label></span>.</p>
+      <p><span data-i18n="Mình muốn hiểu hơn về">Mình muốn hiểu hơn về</span>
+        <span class="pick" role="radiogroup" aria-label="Người ấy" data-i18n-aria-label="Người ấy"><label><input type="radio" name="letterDirection" value="gf"><span data-i18n="bạn gái">bạn gái</span></label>/<label><input type="radio" name="letterDirection" value="bf"><span data-i18n="bạn trai">bạn trai</span></label></span>
+        <span data-i18n="của mình,">của mình,</span></p>
+      <p><label for="letterName" data-i18n="người ấy tên là">người ấy tên là</label>
+        <input class="name-line" id="letterName" maxlength="60" autocomplete="off" placeholder="tên người ấy" data-i18n-placeholder="tên người ấy">.</p>
+      <p data-i18n="Nhờ Tim giải mã giúp mình nha!">Nhờ Tim giải mã giúp mình nha!</p>
+      <p class="sign" data-i18n="— Một trái tim đang hơi rối 💗">— Một trái tim đang hơi rối 💗</p>
+      <button type="submit" class="primary" data-i18n="Đóng dấu & gửi 💌">Đóng dấu & gửi 💌</button>
+      <div class="seal" aria-hidden="true">💗</div>
+    </form>
+    <div id="chatFlow" class="chat" hidden>
+      <div id="chatLog" class="chat-log" aria-live="polite"></div>
+      <div id="chatReplies" class="chat-replies"></div>
+      <form id="chatBar" class="chat-bar" novalidate>
+        <label for="chatName" class="sr-only" data-i18n="Tên người ấy">Tên người ấy</label>
+        <input id="chatName" maxlength="60" autocomplete="off" disabled placeholder="Nhập tin nhắn…" data-i18n-placeholder="Nhập tin nhắn…">
+        <button id="chatSend" class="primary" disabled data-i18n="Gửi">Gửi</button>
+      </form>
+    </div>
+    <div id="swipeFlow" hidden>
+      <div class="swipe-progress" id="swipeProgress" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="deck">
+        <div id="swipeCard" class="swipe-card" tabindex="0" role="group" aria-labelledby="swipeQuestion" aria-describedby="swipeHint swipeKeys">
+          <span class="stamp left" id="swipeStampLeft" aria-hidden="true"></span><span class="stamp right" id="swipeStampRight" aria-hidden="true"></span>
+          <div class="swipe-icons" id="swipeIcons" aria-hidden="true"></div>
+          <h3 id="swipeQuestion"></h3><p class="hint" id="swipeHint"></p>
+          <span class="sr-only" id="swipeKeys" data-i18n="Dùng phím mũi tên trái hoặc phải để chọn.">Dùng phím mũi tên trái hoặc phải để chọn.</span>
+        </div>
+        <form id="swipeTag" class="nametag" novalidate hidden>
+          <div class="tag-head"><b data-i18n="XIN CHÀO">XIN CHÀO</b><span data-i18n="người ấy của mình tên là">người ấy của mình tên là</span></div>
+          <div class="tag-body"><label for="swipeName" class="sr-only" data-i18n="Tên người ấy">Tên người ấy</label><input id="swipeName" maxlength="60" autocomplete="off"><button class="primary" data-i18n="Dán bảng tên ✓">Dán bảng tên ✓</button></div>
+        </form>
+      </div>
+      <div class="row swipe-buttons" id="swipeButtons"><button type="button" id="swipeLeft"></button><button type="button" id="swipeRight"></button></div>
+    </div>
+    <div id="voiceSetup">
+      <div class="row"><button type="button" id="recordSetup" data-i18n="🎤 Thiết lập bằng giọng nói">🎤 Thiết lập bằng giọng nói</button><button type="button" id="cancelRecording" hidden data-i18n="Hủy ghi âm">Hủy ghi âm</button></div>
+      <p class="hint" data-i18n="Ví dụ: “Dùng tiếng Anh, giải mã bạn gái, tên là Emma.”">Ví dụ: “Dùng tiếng Anh, giải mã bạn gái, tên là Emma.”</p>
+      <p class="hint" data-i18n="Bản ghi tối đa 30 giây / 2 MB được gửi lên server và OpenAI để nhận diện; app không lưu bản ghi.">Bản ghi tối đa 30 giây / 2 MB được gửi lên server và OpenAI để nhận diện; app không lưu bản ghi.</p>
+    </div>
+    <div id="setupReview" hidden><h3 tabindex="-1" id="reviewTitle" data-i18n="Bạn kiểm tra lại nhé">Bạn kiểm tra lại nhé</h3><p id="setupSummary"></p><div class="row"><button id="confirmSetup" data-i18n="Xác nhận và bắt đầu">Xác nhận và bắt đầu</button><button id="editSetup" data-i18n="Sửa lại">Sửa lại</button></div></div>
+    <p id="setupStatus" class="hint" role="status"></p><p id="setupTranscript" class="transcript" hidden></p><p id="setupError" class="err" role="alert" hidden></p>
+    <button id="cancelSetup" hidden data-i18n="Hủy thay đổi">Hủy thay đổi</button>
+  </section>
+  <div class="workspace" id="app" hidden>
+    <section class="panel" aria-labelledby="inputTitle">
+      <div class="bot-intro"><span id="inputBot" class="tim-bot" data-state="input" aria-hidden="true"></span><div><h2 id="inputTitle" data-i18n="💌 Người ấy nói gì?">💌 Người ấy nói gì?</h2><p id="inputBubble" class="bot-bubble"></p></div></div>
+      <p id="turnCount" class="hint" role="status"></p>
+      <div class="row"><button id="newConversation" data-i18n="Cuộc trò chuyện mới">Cuộc trò chuyện mới</button></div>
+      <p class="hint" id="followup" hidden></p>
+      <div id="chosenResponse" hidden><p id="chosenText"></p><label for="sentReply" data-i18n="Câu bạn thực sự đã gửi — không bắt buộc">Câu bạn thực sự đã gửi — không bắt buộc</label><textarea id="sentReply" maxlength="1000" rows="2"></textarea></div>
+      <label for="text" data-i18n="Lời nhắn cần giải mã">Lời nhắn cần giải mã</label>
       <textarea id="text" maxlength="500" aria-describedby="inputHint" placeholder="Ví dụ: Em không sao đâu…"></textarea>
-      <p class="hint" id="inputHint">Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.</p>
-      <p class="hint">Thử một câu quen quen nhé ↓</p>
-      <div class="chips" id="chips" role="group" aria-label="Câu ví dụ"></div>
+      <p class="hint" id="inputHint" data-i18n="Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.">Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.</p>
+      <p class="hint" data-i18n="Thử một câu quen quen nhé ↓">Thử một câu quen quen nhé ↓</p>
+      <div class="chips" id="chips" role="group" aria-label="Câu ví dụ" data-i18n-aria-label="Câu ví dụ"></div>
+      <label for="context" data-i18n="Bối cảnh — không bắt buộc">Bối cảnh — không bắt buộc</label>
+      <textarea id="context" maxlength="1000" rows="3" aria-describedby="contextHint" placeholder="Ví dụ: Hai người vừa cãi nhau vì mình quên cuộc hẹn…" data-i18n-placeholder="Ví dụ: Hai người vừa cãi nhau vì mình quên cuộc hẹn…"></textarea>
+      <p class="hint" id="contextHint" data-i18n="Trước đó hai người nói gì? Có chuyện gì vừa xảy ra? Tối đa 1.000 ký tự.">Trước đó hai người nói gì? Có chuyện gì vừa xảy ra? Tối đa 1.000 ký tự.</p>
       <div id="attachment" hidden>
-        <img id="preview" alt="Ảnh đoạn chat đã chọn">
-        <button id="removeImage">✕ Xóa ảnh</button>
+        <img id="preview" alt="Ảnh đoạn chat đã chọn" data-i18n-alt="Ảnh đoạn chat đã chọn">
+        <button id="removeImage" data-i18n="✕ Xóa ảnh">✕ Xóa ảnh</button>
       </div>
       <div class="row">
-        <button class="icon" id="mic" title="Nói" aria-label="Nhập lời nhắn bằng giọng nói">🎤</button>
-        <button class="icon" id="pick" title="Ảnh chụp đoạn chat" aria-label="Chọn ảnh đoạn chat">📷</button>
+        <button class="icon" id="mic" title="Nói" data-i18n-title="Nói" aria-label="Nhập lời nhắn bằng giọng nói" data-i18n-aria-label="Nhập lời nhắn bằng giọng nói">🎤</button>
+        <button class="icon" id="pick" title="Ảnh chụp đoạn chat" data-i18n-title="Ảnh chụp đoạn chat" aria-label="Chọn ảnh đoạn chat" data-i18n-aria-label="Chọn ảnh đoạn chat">📷</button>
         <input type="file" id="file" accept="image/*" hidden>
-        <button id="go">Giải mã! ✨</button>
+        <button id="go" data-i18n="Giải mã! ✨">Giải mã! ✨</button>
       </div>
       <p class="hint" id="status" role="status"></p>
       <p class="err" id="err" role="alert" hidden></p>
     </section>
-    <section class="panel" aria-label="Kết quả giải mã">
+    <section class="panel" aria-label="Kết quả giải mã" data-i18n-aria-label="Kết quả giải mã">
       <div class="empty" id="empty">
-        <div class="mascot" aria-hidden="true"><span class="heart">♥</span><span class="face">• ‿ •</span></div>
-        <h2>Trái tim đang hóng chuyện</h2>
-        <p>Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!</p>
+        <span class="tim-bot" data-state="greet" aria-hidden="true"></span>
+        <h2 data-i18n="Trái tim đang hóng chuyện">Trái tim đang hóng chuyện</h2>
+        <p data-i18n="Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!">Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!</p>
       </div>
       <div class="loading" id="loading" hidden>
-        <div class="mascot" aria-hidden="true"><span class="heart">♥</span><span class="face">◉ _ ◉</span><span class="lens">🔍</span></div>
-        <h2>Đang phân tích tâm lý…</h2>
+        <span class="tim-bot" data-state="waiting" aria-hidden="true"></span>
+        <h2 data-i18n="Đang phân tích tâm lý…">Đang phân tích tâm lý…</h2>
         <div class="scan" aria-hidden="true"><div></div></div>
         <p id="loadingLine"></p>
       </div>
       <div id="out" hidden aria-live="polite" aria-atomic="true">
         <div class="card danger-card">
           <div class="danger-heading">
-            <div class="mascot" aria-hidden="true"><span class="heart">♥</span><span class="face" id="mascotFace">• ‿ •</span></div>
-            <div><h3>Mức nguy hiểm</h3><div class="big" id="dangerNum">0%</div><div id="dangerLabel">Êm đẹp</div></div>
+            <span id="resultBot" class="tim-bot" data-state="idle" aria-hidden="true"></span>
+            <div><h3 data-i18n="Mức nguy hiểm">Mức nguy hiểm</h3><div class="big" id="dangerNum">0%</div><div id="dangerLabel">Êm đẹp</div></div>
           </div>
-          <div class="meter" role="meter" aria-label="Mức nguy hiểm" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="dangerMeter"><div id="bar"></div></div>
+          <div class="meter" role="meter" aria-label="Mức nguy hiểm" data-i18n-aria-label="Mức nguy hiểm" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="dangerMeter"><div id="bar"></div></div>
         </div>
-        <div class="card bubble"><h3>🧠 Ý thật sự</h3><p id="meaning"></p></div>
-        <div class="card bubble reply-card"><h3>💬 Nên trả lời</h3><p id="reply"></p></div>
-        <div class="card bubble avoid-card"><h3>🙊 Tuyệt đối đừng nói</h3><p id="avoid"></p></div>
-        <button id="speak">🔊 Đọc kịch tính</button>
+        <div class="card bubble"><h3 data-i18n="🧠 Ý thật sự">🧠 Ý thật sự</h3><p id="meaning"></p></div>
+        <div class="card bubble reply-card"><h3 data-i18n="💬 Nên trả lời">💬 Nên trả lời</h3><p id="reply"></p><button id="chooseReply" data-i18n="Chọn câu này & lưu">Chọn câu này & lưu</button></div>
+        <div class="card bubble avoid-card"><h3 data-i18n="🙊 Tuyệt đối đừng nói">🙊 Tuyệt đối đừng nói</h3><p id="avoid"></p><button id="chooseAvoid" data-i18n="Chọn câu này & lưu">Chọn câu này & lưu</button></div>
+        <div id="sourceReview" hidden><label for="sourceText" data-i18n="Lời đọc từ ảnh — kiểm tra trước khi lưu">Lời đọc từ ảnh — kiểm tra trước khi lưu</label><textarea id="sourceText" maxlength="1000" rows="3"></textarea></div>
+        <button id="saveConversation" data-i18n="Lưu kết quả / thử lưu lại">Lưu kết quả / thử lưu lại</button>
+        <button id="speak" data-i18n="🔊 Đọc tôi nghe">🔊 Đọc tôi nghe</button>
       </div>
     </section>
   </div>
-  <p class="footer">Giải mã cho vui thôi nhé. Muốn hiểu thật, hãy hỏi người ấy 💗</p>
+  <section class="panel" id="historyPanel" hidden><h2 data-i18n="Lịch sử trên thiết bị">Lịch sử trên thiết bị</h2><p class="hint" data-i18n="Chọn câu để lưu và hỏi tiếp. Lịch sử chỉ ở trình duyệt này; xóa dữ liệu trình duyệt sẽ mất lịch sử. Người dùng chung thiết bị có thể xem. Kết quả chưa lưu sẽ mất khi đóng trang.">Chọn câu để lưu và hỏi tiếp. Lịch sử chỉ ở trình duyệt này; xóa dữ liệu trình duyệt sẽ mất lịch sử. Người dùng chung thiết bị có thể xem. Kết quả chưa lưu sẽ mất khi đóng trang.</p><p id="historyStatus" role="status"></p><div id="historyList"></div><div id="conversationLog"></div></section>
+  <p class="footer" data-i18n="Giải mã cho vui thôi nhé. Muốn hiểu thật, hãy hỏi người ấy 💗">Giải mã cho vui thôi nhé. Muốn hiểu thật, hãy hỏi người ấy 💗</p>
 </main>
 
 <script>
-  const $ = (id) => document.getElementById(id);
-  const EXAMPLES = {
-    gf: ['Em không sao đâu', 'Tùy anh', 'Anh đi đi, em không giận'],
-    bf: ['Anh bận chút', 'Ừ', 'Để anh suy nghĩ đã'],
-  };
-  const LOADING_LINES = [
-    'Đang đếm số dấu chấm cuối câu…',
-    'Đang tra từ điển Dỗi – Việt…',
-    'Đang đo nhiệt độ tin nhắn… 🌡️',
-    'Đang so sánh với 1.000 lần “em không sao”…',
-    'Đang kiểm tra lịch sử seen không rep…',
-    'Đang hỏi ý kiến hội bạn thân…',
-  ];
-  let dir = 'gf', image = null;
-
-  function setDir(d) {
-    dir = d;
-    document.querySelectorAll('.toggle button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.dir === d));
-    $('text').placeholder = 'Ví dụ: ' + EXAMPLES[d][0] + '…';
-    $('chips').replaceChildren(...EXAMPLES[d].map((t) => {
-      const b = document.createElement('button');
-      b.textContent = t;
-      b.onclick = () => { $('text').value = t; decode(); };
-      return b;
-    }));
-  }
-  document.querySelectorAll('.toggle button').forEach((b) => (b.onclick = () => setDir(b.dataset.dir)));
-  setDir('gf');
-
-  async function post(url, body) {
-    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Có lỗi xảy ra, thử lại nhé.');
-    return r;
-  }
-
-  function showError(msg) { $('err').textContent = msg; $('err').hidden = !msg; }
-
-  async function decode() {
-    if ($('go').disabled) return;
-    showError('');
-    $('status').textContent = 'Đang phân tích tâm lý…';
-    $('go').disabled = true;
-    $('go').textContent = 'Đang phân tích tâm lý…';
-    const hadResult = !$('out').hidden;
-    $('empty').hidden = $('out').hidden = true;
-    $('loading').hidden = false;
-    let i = 0;
-    const tick = () => {
-      $('loadingLine').textContent = LOADING_LINES[i++ % LOADING_LINES.length];
-      $('loadingLine').style.animation = 'none';
-      $('loadingLine').offsetWidth; // restart fade-in
-      $('loadingLine').style.animation = '';
-    };
-    tick();
-    const timer = setInterval(tick, 1100);
-    try {
-      const d = await (await post('/api/translate', { text: $('text').value, image, direction: dir })).json();
-      $('meaning').textContent = d.meaning;
-      $('reply').textContent = d.reply;
-      $('avoid').textContent = d.avoid;
-      $('dangerNum').textContent = d.danger + '%';
-      const level = d.danger < 40 ? 'safe' : d.danger < 70 ? 'warning' : 'danger';
-      $('dangerLabel').textContent = { safe: 'Êm đẹp', warning: 'Có mùi dỗi', danger: 'Báo động đỏ' }[level];
-      $('mascotFace').textContent = { safe: '• ‿ •', warning: '• _ •', danger: 'O ﹏ O' }[level];
-      $('out').style.setProperty('--level-color', `var(--${level})`);
-      $('dangerMeter').setAttribute('aria-valuenow', d.danger);
-      $('dangerMeter').setAttribute('aria-valuetext', d.danger + '% — ' + $('dangerLabel').textContent);
-      $('empty').hidden = true;
-      $('out').hidden = false;
-      $('bar').style.width = '0';
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        $('bar').style.width = d.danger + '%';
-      }));
-      $('out').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
-    } catch (e) {
-      showError(e.message);
-      $('out').hidden = !hadResult;
-      $('empty').hidden = hadResult;
-    } finally {
-      clearInterval(timer);
-      $('loading').hidden = true;
-      $('go').disabled = false;
-      $('go').textContent = 'Giải mã! ✨';
-      $('status').textContent = '';
-    }
-  }
-  $('go').onclick = decode;
-
-  $('pick').onclick = () => $('file').click();
-  $('file').onchange = () => {
-    const f = $('file').files[0];
-    if (!f) return;
-    const fr = new FileReader();
-    fr.onload = () => { image = fr.result; $('preview').src = image; $('attachment').hidden = false; };
-    fr.readAsDataURL(f);
-  };
-  $('removeImage').onclick = () => { image = null; $('attachment').hidden = true; $('preview').removeAttribute('src'); $('file').value = ''; };
-
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) $('mic').hidden = true;
-  else $('mic').onclick = () => {
-    const rec = new SR();
-    rec.lang = 'vi-VN';
-    rec.onresult = (e) => { $('text').value = e.results[0][0].transcript; decode(); };
-    rec.onerror = () => showError('Mic không nghe rõ, gõ giúp mình nhé.');
-    rec.start();
-    $('mic').textContent = '👂';
-    rec.onend = () => ($('mic').textContent = '🎤');
-  };
-
-  $('speak').onclick = async () => {
-    $('speak').disabled = true;
-    $('speak').textContent = 'Đang chuẩn bị giọng đọc…';
-    try {
-      const blob = await (await post('/api/speak', { text: $('meaning').textContent })).blob();
-      await new Audio(URL.createObjectURL(blob)).play();
-    } catch (e) {
-      showError(e.message);
-    } finally {
-      $('speak').disabled = false;
-      $('speak').textContent = '🔊 Đọc kịch tính';
-    }
-  };
+  // Edit this HTML setting for the demo; the API accepts at most 50 total turns.
+  const DEMO_SETTINGS = { maxConversationTurns: 10 };
 </script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+<script src="js/flows.js"></script>
+<script src="js/onboarding.js"></script>
 </body>
 </html>

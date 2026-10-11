@@ -1,0 +1,181 @@
+{
+  "ok": true,
+  "engine": "component-row",
+  "kind": "sprite-gen-inspect-report",
+  "run_dir": "/Users/andy/Desktop/Project/ai_girlfriend/assets/generated/sprites/tim-bot",
+  "states": [
+    "greet",
+    "choose",
+    "input",
+    "waiting",
+    "reading"
+  ],
+  "thresholds": {
+    "histogram_min": 0.0,
+    "dhash_min": 0.55,
+    "motion_min": 0.01
+  },
+  "rows": [
+    {
+      "state": "greet",
+      "source": "frames",
+      "expected_frames": 4,
+      "found_frames": 4,
+      "natural_pose_count": 4,
+      "frame_files": [
+        "frames/greet/frame-0.png",
+        "frames/greet/frame-1.png",
+        "frames/greet/frame-2.png",
+        "frames/greet/frame-3.png"
+      ],
+      "metrics": {
+        "histogram_intersection": {
+          "min": 0.9742491101471382,
+          "mean": 0.9808627199291734
+        },
+        "dhash_similarity": {
+          "min": 0.875,
+          "mean": 0.9192708333333334
+        },
+        "motion_presence": 0.12253521688623366,
+        "centroid_sigma": {
+          "x": 1.169112979496637,
+          "y": 3.588650104457017
+        }
+      },
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "state": "choose",
+      "source": "frames",
+      "expected_frames": 4,
+      "found_frames": 4,
+      "natural_pose_count": 4,
+      "frame_files": [
+        "frames/choose/frame-0.png",
+        "frames/choose/frame-1.png",
+        "frames/choose/frame-2.png",
+        "frames/choose/frame-3.png"
+      ],
+      "metrics": {
+        "histogram_intersection": {
+          "min": 0.9765159359528511,
+          "mean": 0.98171707756827
+        },
+        "dhash_similarity": {
+          "min": 0.96875,
+          "mean": 0.9817708333333334
+        },
+        "motion_presence": 0.050343392565359475,
+        "centroid_sigma": {
+          "x": 0.48510636966203413,
+          "y": 0.8985590734125677
+        }
+      },
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "state": "input",
+      "source": "frames",
+      "expected_frames": 4,
+      "found_frames": 4,
+      "natural_pose_count": 4,
+      "frame_files": [
+        "frames/input/frame-0.png",
+        "frames/input/frame-1.png",
+        "frames/input/frame-2.png",
+        "frames/input/frame-3.png"
+      ],
+      "metrics": {
+        "histogram_intersection": {
+          "min": 0.961069492523886,
+          "mean": 0.975858251254092
+        },
+        "dhash_similarity": {
+          "min": 0.96875,
+          "mean": 0.9791666666666666
+        },
+        "motion_presence": 0.030200514450571897,
+        "centroid_sigma": {
+          "x": 0.7204147566520113,
+          "y": 0.3954775203652428
+        }
+      },
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "state": "waiting",
+      "source": "frames",
+      "expected_frames": 4,
+      "found_frames": 4,
+      "natural_pose_count": 4,
+      "frame_files": [
+        "frames/waiting/frame-0.png",
+        "frames/waiting/frame-1.png",
+        "frames/waiting/frame-2.png",
+        "frames/waiting/frame-3.png"
+      ],
+      "metrics": {
+        "histogram_intersection": {
+          "min": 0.9718439148617676,
+          "mean": 0.9778502154885478
+        },
+        "dhash_similarity": {
+          "min": 0.953125,
+          "mean": 0.9661458333333334
+        },
+        "motion_presence": 0.027909502016952616,
+        "centroid_sigma": {
+          "x": 0.6205272444605626,
+          "y": 0.219480921334655
+        }
+      },
+      "ok": true,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "state": "reading",
+      "source": "frames",
+      "expected_frames": 4,
+      "found_frames": 4,
+      "natural_pose_count": 4,
+      "frame_files": [
+        "frames/reading/frame-0.png",
+        "frames/reading/frame-1.png",
+        "frames/reading/frame-2.png",
+        "frames/reading/frame-3.png"
+      ],
+      "metrics": {
+        "histogram_intersection": {
+          "min": 0.9839459386367064,
+          "mean": 0.9884188789803178
+        },
+        "dhash_similarity": {
+          "min": 0.9375,
+          "mean": 0.9661458333333334
+        },
+        "motion_presence": 0.006468290441176471,
+        "centroid_sigma": {
+          "x": 0.05643533849094595,
+          "y": 0.08940744717774117
+        }
+      },
+      "ok": true,
+      "errors": [],
+      "warnings": [
+        "reading: motion presence is too low (0.0065 < 0.0100)"
+      ]
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    "reading: motion presence is too low (0.0065 < 0.0100)"
+  ]
+}

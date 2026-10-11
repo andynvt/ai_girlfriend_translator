@@ -1,0 +1,34 @@
+{
+  "kind": "sprite-gen-image-report",
+  "provider": "codex",
+  "prompt": "Create a single full-body idle character reference for Tim Bot, the friendly mascot of a Vietnamese love-message interpreter app. One cute anthropomorphic pink heart with a clear classic heart silhouette, short rounded arms and short stubby legs, tiny mitten hands, dark expressive oval eyes with small highlights, a small friendly smiling mouth, subtle rose cheeks, and simple lavender over-ear headphones with a small rounded microphone. Soft matte clay 2.5D toy illustration, warm diffuse studio lighting, clean uncomplicated shapes, polished friendly adult-friendly pastel aesthetic, no metallic or mechanical details. Palette: warm rose pink body, lavender headphones, dark plum facial features. Facing front, both feet level, arms relaxed slightly away from the body, entire character and headset visible with generous transparent margins. Designed to remain legible at 112 pixels and easy to animate consistently. No props, no text, no logos, no surrounding hearts or particles, no floor, no cast shadow, no background. Genuine transparent background. This is one neutral master character reference, not a sprite sheet, not a collage.",
+  "out": "/Users/andy/Desktop/Project/ai_girlfriend/assets/tim-bot/concept-v1/tim-bot.png",
+  "raw": "/Users/andy/Desktop/Project/ai_girlfriend/assets/tim-bot/concept-v1/tim-bot.png.raw.png",
+  "raw_bytes": 1249160,
+  "elapsed_seconds": 45.933,
+  "model": "gpt-5.5",
+  "session_id": "01a12930-764a-7281-83e1-863da3a2f232",
+  "refs": [],
+  "transparent": true,
+  "alpha": {
+    "strategy": "native",
+    "strategy_source": "provider-default",
+    "out": "/Users/andy/Desktop/Project/ai_girlfriend/assets/tim-bot/concept-v1/tim-bot.png",
+    "mode": "RGBA",
+    "method": "native",
+    "size": "1312x1199",
+    "alpha_zero_pct": 48.55,
+    "partial_alpha_pct": 51.4,
+    "opaque_pct": 0.05,
+    "cleaned_transparent_rgb_pixels": 293,
+    "stale_transparent_rgb_pixels": 0,
+    "white_check": "/Users/andy/Desktop/Project/ai_girlfriend/assets/tim-bot/concept-v1/tim-bot-white.png"
+  },
+  "chroma": null,
+  "extra": {
+    "inline_results": 1,
+    "rollout_cleaned": true,
+    "transparent_background_reported": true
+  },
+  "provider_resolved_from": "explicit"
+}
