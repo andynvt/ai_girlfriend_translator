@@ -5,67 +5,134 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Thông Dịch Viên Tình Yêu 💘</title>
 <style>
+  :root {
+    --background: #fff8f3; --surface: #fff; --primary: #b4235a; --primary-soft: #ffe6ee;
+    --lavender: #f0e9ff; --mint: #e6f6ed; --text: #291b23; --muted: #715363;
+    --border: #e6c8d6; --focus: #6744a3; --safe: #237a4b; --warning: #946000; --danger: #b42332;
+    --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
+    --radius-card: 24px; --radius-input: 16px; --radius-pill: 999px;
+    --shadow: 0 8px 28px #71334c0c; --font: system-ui, sans-serif;
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: system-ui, sans-serif; background: linear-gradient(160deg, #ffe4ec, #fff5f8); color: #2b1a22; min-height: 100vh; }
-  main { max-width: 560px; margin: 0 auto; padding: 20px 16px 40px; }
-  h1 { text-align: center; font-size: 1.9rem; margin: 8px 0 4px; color: #d6336c; }
-  .sub { text-align: center; margin: 0 0 18px; color: #7a5563; }
-  .toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-  button { font: inherit; border: 0; border-radius: 14px; padding: 12px; cursor: pointer; }
-  .toggle button { background: #fff; color: #d6336c; font-weight: 600; border: 2px solid #f7b6cb; }
-  .toggle button[aria-pressed="true"] { background: #d6336c; color: #fff; border-color: #d6336c; }
-  textarea { width: 100%; font: inherit; font-size: 1.15rem; padding: 14px; border-radius: 14px; border: 2px solid #f7b6cb; resize: vertical; min-height: 90px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-  .chips button { background: #fff; padding: 6px 12px; border-radius: 999px; font-size: .95rem; border: 1px solid #f7b6cb; }
-  .row { display: flex; gap: 8px; }
-  .row .icon { background: #fff; border: 2px solid #f7b6cb; font-size: 1.3rem; width: 54px; }
-  #go { flex: 1; background: #d6336c; color: #fff; font-size: 1.2rem; font-weight: 700; }
-  #go:disabled { opacity: .6; }
-  #preview { max-width: 100%; max-height: 160px; border-radius: 12px; margin-top: 10px; display: block; }
-  .card { background: #fff; border-radius: 16px; padding: 14px 16px; margin-top: 12px; box-shadow: 0 2px 10px #d6336c1a; }
-  .card h3 { margin: 0 0 6px; font-size: .95rem; color: #7a5563; }
-  .card p { margin: 0; font-size: 1.15rem; line-height: 1.45; }
-  .meter { height: 18px; background: #f3e3e9; border-radius: 999px; overflow: hidden; }
-  .meter div { height: 100%; width: 0; transition: width .8s ease, background .8s; }
-  .big { font-size: 1.6rem; font-weight: 800; }
-  #speak { width: 100%; margin-top: 12px; background: #2b1a22; color: #fff; font-weight: 600; }
-  .err { color: #c92a2a; text-align: center; margin-top: 12px; }
+  body { margin: 0; font-family: var(--font); font-size: 18px; line-height: 1.5; background: radial-gradient(ellipse at top left, var(--primary-soft), transparent 55%), radial-gradient(ellipse at bottom right, var(--lavender), transparent 55%), var(--background); color: var(--text); min-height: 100vh; }
+  main { max-width: 1120px; margin: 0 auto; padding: var(--space-8) var(--space-4); }
+  header { text-align: center; margin-bottom: var(--space-8); }
+  .badge { display: inline-block; background: var(--lavender); color: var(--focus); border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3); font-size: 14px; font-weight: 700; }
+  h1 { font-size: clamp(28px, 4vw, 40px); line-height: 1.2; margin: var(--space-4) 0 var(--space-2); letter-spacing: -.03em; }
+  h1 span { color: var(--primary); }
+  .sub { margin: 0; color: var(--muted); }
+  .workspace { display: grid; gap: var(--space-6); align-items: start; }
+  .panel { min-width: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); padding: var(--space-6); box-shadow: var(--shadow); }
+  h2 { font-size: 22px; margin: 0 0 var(--space-4); }
+  .toggle { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-6); }
+  button { font: inherit; font-weight: 600; border: 1px solid transparent; border-radius: var(--radius-pill); padding: var(--space-3) var(--space-4); min-height: 48px; cursor: pointer; transition: background .15s, transform .15s; }
+  button:hover:not(:disabled) { transform: translateY(-2px); }
+  button:active:not(:disabled) { transform: translateY(0); }
+  button:disabled { opacity: .65; cursor: wait; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .toggle button { background: var(--lavender); color: var(--focus); font-size: 16px; }
+  .toggle button[aria-pressed="true"] { background: var(--primary); color: var(--surface); }
+  label { display: block; font-weight: 700; margin-bottom: var(--space-2); }
+  textarea { width: 100%; font: inherit; padding: var(--space-4); border-radius: var(--radius-input); border: 2px solid var(--border); background: var(--background); color: var(--text); resize: vertical; min-height: 140px; }
+  textarea::placeholder { color: var(--muted); }
+  .hint { color: var(--muted); font-size: 14px; margin: var(--space-2) 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0 var(--space-6); }
+  .chips button { background: var(--primary-soft); color: var(--primary); padding: var(--space-2) var(--space-3); font-size: 14px; }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .row .icon { background: var(--lavender); color: var(--focus); font-size: 22px; width: 52px; padding: var(--space-2); }
+  #go { flex: 1; background: var(--primary); color: var(--surface); font-size: 18px; }
+  #attachment { margin-bottom: var(--space-4); }
+  #preview { max-width: 100%; max-height: 180px; border-radius: var(--radius-input); display: block; }
+  #removeImage { background: var(--primary-soft); color: var(--primary); margin-top: var(--space-2); font-size: 14px; }
+  .empty { text-align: center; padding: var(--space-8) 0; }
+  .mascot { display: inline-grid; place-items: center; position: relative; width: 112px; height: 112px; background: var(--primary-soft); border-radius: 40% 45% 38% 48%; margin-bottom: var(--space-4); transform: rotate(-6deg); }
+  .heart { font-size: 88px; color: var(--primary); line-height: 1; }
+  .face { position: absolute; top: 46px; left: 0; width: 100%; text-align: center; font-size: 20px; font-weight: 800; color: white; }
+  .empty h2 { margin-bottom: var(--space-2); }
+  .empty p { color: var(--muted); margin: 0 auto; max-width: 30ch; }
+  .card { border-radius: var(--radius-card); padding: var(--space-4); margin-top: var(--space-4); background: var(--lavender); }
+  .card h3 { margin: 0 0 var(--space-2); font-size: 15px; color: var(--muted); }
+  .card p { margin: 0; font-size: 20px; line-height: 1.55; overflow-wrap: anywhere; white-space: pre-line; }
+  .bubble { border-bottom-left-radius: var(--space-1); }
+  .reply-card { background: var(--mint); margin-left: var(--space-4); border-bottom-right-radius: var(--space-1); border-bottom-left-radius: var(--radius-card); }
+  .avoid-card { background: var(--primary-soft); }
+  .danger-card { margin-top: 0; background: var(--background); }
+  .danger-heading { display: flex; align-items: center; gap: var(--space-4); }
+  .danger-heading .mascot { flex-shrink: 0; width: 72px; height: 72px; margin: 0; }
+  .danger-heading .heart { font-size: 60px; }
+  .danger-heading .face { top: 30px; font-size: 14px; }
+  .danger-heading h3 { margin: 0; }
+  .big { font-size: 36px; font-weight: 800; line-height: 1.2; }
+  #dangerLabel { font-size: 16px; font-weight: 700; }
+  #out { --level-color: var(--safe); }
+  #dangerLabel, .big { color: var(--level-color); }
+  .meter { height: 16px; background: var(--border); border-radius: var(--radius-pill); overflow: hidden; margin-top: var(--space-4); }
+  .meter div { height: 100%; width: 0; background: var(--level-color); border-radius: inherit; transition: width .6s ease; }
+  #out:not([hidden]) { animation: appear .25s ease-out; }
+  #speak { width: 100%; margin-top: var(--space-4); background: var(--focus); color: var(--surface); }
+  .err { color: var(--danger); background: var(--primary-soft); border-radius: var(--radius-input); padding: var(--space-3); margin-top: var(--space-4); }
+  .footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: var(--space-6); }
   [hidden] { display: none !important; }
+  @keyframes appear { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @media (min-width: 860px) { .workspace { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 400px) { .panel { padding: var(--space-4); } .toggle button { padding: var(--space-2); font-size: 14px; } #go { flex-basis: 100%; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
 <main>
-  <h1>💘 Thông Dịch Viên Tình Yêu</h1>
-  <p class="sub">Họ nói một đằng, AI dịch ra ý thật</p>
-
-  <div class="toggle">
-    <button data-dir="gf" aria-pressed="true">💁‍♀️ Giải mã Bạn Gái</button>
-    <button data-dir="bf" aria-pressed="false">🙋‍♂️ Giải mã Bạn Trai</button>
+  <header>
+    <div class="badge">Một chút AI, một chút thấu hiểu ✨</div>
+    <h1>Thông Dịch Viên <span>Tình Yêu</span></h1>
+    <p class="sub">Đọc lời người ấy. Gỡ rối trái tim bạn.</p>
+  </header>
+  <div class="workspace">
+    <section class="panel" aria-labelledby="inputTitle">
+      <h2 id="inputTitle">💌 Người ấy nói gì?</h2>
+      <div class="toggle" role="group" aria-label="Chọn người cần giải mã">
+        <button data-dir="gf" aria-pressed="true">💁‍♀️ Bạn gái</button>
+        <button data-dir="bf" aria-pressed="false">🙋‍♂️ Bạn trai</button>
+      </div>
+      <label for="text">Lời nhắn cần giải mã</label>
+      <textarea id="text" maxlength="500" aria-describedby="inputHint" placeholder="Ví dụ: Em không sao đâu…"></textarea>
+      <p class="hint" id="inputHint">Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.</p>
+      <p class="hint">Thử một câu quen quen nhé ↓</p>
+      <div class="chips" id="chips" role="group" aria-label="Câu ví dụ"></div>
+      <div id="attachment" hidden>
+        <img id="preview" alt="Ảnh đoạn chat đã chọn">
+        <button id="removeImage">✕ Xóa ảnh</button>
+      </div>
+      <div class="row">
+        <button class="icon" id="mic" title="Nói" aria-label="Nhập lời nhắn bằng giọng nói">🎤</button>
+        <button class="icon" id="pick" title="Ảnh chụp đoạn chat" aria-label="Chọn ảnh đoạn chat">📷</button>
+        <input type="file" id="file" accept="image/*" hidden>
+        <button id="go">Giải mã! ✨</button>
+      </div>
+      <p class="hint" id="status" role="status"></p>
+      <p class="err" id="err" role="alert" hidden></p>
+    </section>
+    <section class="panel" aria-label="Kết quả giải mã">
+      <div class="empty" id="empty">
+        <div class="mascot" aria-hidden="true"><span class="heart">♥</span><span class="face">• ‿ •</span></div>
+        <h2>Trái tim đang hóng chuyện</h2>
+        <p>Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!</p>
+      </div>
+      <div id="out" hidden aria-live="polite" aria-atomic="true">
+        <div class="card danger-card">
+          <div class="danger-heading">
+            <div class="mascot" aria-hidden="true"><span class="heart">♥</span><span class="face" id="mascotFace">• ‿ •</span></div>
+            <div><h3>Mức nguy hiểm</h3><div class="big" id="dangerNum">0%</div><div id="dangerLabel">Êm đẹp</div></div>
+          </div>
+          <div class="meter" role="meter" aria-label="Mức nguy hiểm" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="dangerMeter"><div id="bar"></div></div>
+        </div>
+        <div class="card bubble"><h3>🧠 Ý thật sự</h3><p id="meaning"></p></div>
+        <div class="card bubble reply-card"><h3>💬 Nên trả lời</h3><p id="reply"></p></div>
+        <div class="card bubble avoid-card"><h3>🙊 Tuyệt đối đừng nói</h3><p id="avoid"></p></div>
+        <button id="speak">🔊 Đọc kịch tính</button>
+      </div>
+    </section>
   </div>
-
-  <textarea id="text" maxlength="500" placeholder="Ví dụ: Em không sao đâu…"></textarea>
-  <div class="chips" id="chips"></div>
-  <img id="preview" hidden alt="Ảnh đoạn chat">
-
-  <div class="row">
-    <button class="icon" id="mic" title="Nói">🎤</button>
-    <button class="icon" id="pick" title="Ảnh chụp đoạn chat">📷</button>
-    <input type="file" id="file" accept="image/*" hidden>
-    <button id="go">Giải mã!</button>
-  </div>
-
-  <p class="err" id="err" hidden></p>
-
-  <section id="out" hidden>
-    <div class="card">
-      <h3>🚨 Mức nguy hiểm: <span class="big" id="dangerNum">0%</span></h3>
-      <div class="meter"><div id="bar"></div></div>
-    </div>
-    <div class="card"><h3>🧠 Ý thật sự</h3><p id="meaning"></p></div>
-    <div class="card"><h3>✅ Nên trả lời</h3><p id="reply"></p></div>
-    <div class="card"><h3>❌ Tuyệt đối đừng nói</h3><p id="avoid"></p></div>
-    <button id="speak">🔊 Đọc kịch tính</button>
-  </section>
+  <p class="footer">Giải mã cho vui thôi nhé. Muốn hiểu thật, hãy hỏi người ấy 💗</p>
 </main>
 
 <script>
@@ -99,7 +166,9 @@
   function showError(msg) { $('err').textContent = msg; $('err').hidden = !msg; }
 
   async function decode() {
+    if ($('go').disabled) return;
     showError('');
+    $('status').textContent = 'Đang phân tích tâm lý…';
     $('go').disabled = true;
     $('go').textContent = 'Đang phân tích tâm lý…';
     try {
@@ -108,18 +177,25 @@
       $('reply').textContent = d.reply;
       $('avoid').textContent = d.avoid;
       $('dangerNum').textContent = d.danger + '%';
+      const level = d.danger < 40 ? 'safe' : d.danger < 70 ? 'warning' : 'danger';
+      $('dangerLabel').textContent = { safe: 'Êm đẹp', warning: 'Có mùi dỗi', danger: 'Báo động đỏ' }[level];
+      $('mascotFace').textContent = { safe: '• ‿ •', warning: '• _ •', danger: 'O ﹏ O' }[level];
+      $('out').style.setProperty('--level-color', `var(--${level})`);
+      $('dangerMeter').setAttribute('aria-valuenow', d.danger);
+      $('dangerMeter').setAttribute('aria-valuetext', d.danger + '% — ' + $('dangerLabel').textContent);
+      $('empty').hidden = true;
       $('out').hidden = false;
       $('bar').style.width = '0';
       requestAnimationFrame(() => requestAnimationFrame(() => {
         $('bar').style.width = d.danger + '%';
-        $('bar').style.background = d.danger < 40 ? '#2f9e44' : d.danger < 70 ? '#f59f00' : '#e03131';
       }));
-      $('out').scrollIntoView({ behavior: 'smooth' });
+      $('out').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'nearest' });
     } catch (e) {
       showError(e.message);
     } finally {
       $('go').disabled = false;
-      $('go').textContent = 'Giải mã!';
+      $('go').textContent = 'Giải mã! ✨';
+      $('status').textContent = '';
     }
   }
   $('go').onclick = decode;
@@ -129,10 +205,10 @@
     const f = $('file').files[0];
     if (!f) return;
     const fr = new FileReader();
-    fr.onload = () => { image = fr.result; $('preview').src = image; $('preview').hidden = false; };
+    fr.onload = () => { image = fr.result; $('preview').src = image; $('attachment').hidden = false; };
     fr.readAsDataURL(f);
   };
-  $('preview').onclick = () => { image = null; $('preview').hidden = true; $('file').value = ''; };
+  $('removeImage').onclick = () => { image = null; $('attachment').hidden = true; $('preview').removeAttribute('src'); $('file').value = ''; };
 
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) $('mic').hidden = true;
@@ -148,13 +224,15 @@
 
   $('speak').onclick = async () => {
     $('speak').disabled = true;
+    $('speak').textContent = 'Đang chuẩn bị giọng đọc…';
     try {
       const blob = await (await post('/api/speak', { text: $('meaning').textContent })).blob();
-      new Audio(URL.createObjectURL(blob)).play();
+      await new Audio(URL.createObjectURL(blob)).play();
     } catch (e) {
       showError(e.message);
     } finally {
       $('speak').disabled = false;
+      $('speak').textContent = '🔊 Đọc kịch tính';
     }
   };
 </script>

@@ -8,6 +8,8 @@
 
 **Tech Stack:** HTML/CSS/JS thuần, Node 24 (fetch có sẵn), Vercel Functions, OpenAI Chat Completions (structured output JSON, vision) + OpenAI TTS. Test bằng `node:test`. Không thêm dependency nào.
 
+**Design system:** [Cupcake tùy biến, CSS thuần](../../design/design-system.md) — nền kem/hồng/lavender, card bo tròn, kết quả bong bóng chat, mascot trái tim và responsive hai cột trên desktop.
+
 **Spec:** Phần brainstorm trong conversation ngày 2026-10-11 (tóm tắt ở Goal + Global Constraints).
 
 ## Global Constraints
