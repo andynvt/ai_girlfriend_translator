@@ -111,6 +111,7 @@ function enterApp() {
   $('text').focus();
 }
 function openSetup() {
+  $('chatTools').open = $('contextMenu').open = $('historyPanel').open = false;
   stopSpeech();
   animateBot($('setupBot'), 'greet');
   $('setupLanguage').value = profile?.language || language;

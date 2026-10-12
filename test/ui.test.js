@@ -17,13 +17,13 @@ function page(danger, onRequest = () => {}, storage = {}, limit = 10) {
       style: { setProperty(key, value) { this[key] = value; } },
       setAttribute(key, value) { this[key] = value; },
       removeAttribute(key) { delete this[key]; },
-      replaceChildren(...children) { this.children = children; }, scrollIntoView() {}, focus() {}, getAttribute(key) { return this[key]; },
+      append(...children) { this.children = [...(this.children || []), ...children]; }, replaceChildren(...children) { this.children = children; }, scrollIntoView() {}, focus() {}, getAttribute(key) { return this[key]; },
     });
     return elements.get(id);
   };
   const context = {
-    document: { documentElement: {}, getElementById: element, querySelectorAll: () => [], createElement: () => ({ append(...children) { this.children = children; } }) },
-    window: { addEventListener() {} }, localStorage: { getItem: key => key === 'love-interpreter.preferences.v1' ? storage.value || null : storage.history || null, setItem(key, value) { if (storage.denied) throw new Error('Denied'); if (key === 'love-interpreter.preferences.v1') storage.value = value; else storage.history = value; } }, clearTimeout() {}, setInterval: () => 0, clearInterval() {}, matchMedia: () => ({ matches: true }), requestAnimationFrame: (fn) => fn(),
+    document: { documentElement: {}, getElementById: element, querySelectorAll: () => [], createElement: tag => ({ tagName: tag.toUpperCase(), setAttribute(key, value) { this[key] = value; }, append(...children) { this.children = [...(this.children || []), ...children]; } }) },
+    window: { addEventListener() {} }, localStorage: { getItem: key => key === 'love-interpreter.preferences.v1' ? storage.value || null : key === 'love-interpreter.onboarding-flow.v1' ? ('flow' in storage ? storage.flow : 'wizard') : storage.history || null, setItem(key, value) { if (storage.denied) throw new Error('Denied'); if (key === 'love-interpreter.preferences.v1') storage.value = value; else storage.history = value; } }, clearTimeout() {}, setInterval: () => 0, clearInterval() {}, matchMedia: () => ({ matches: true }), requestAnimationFrame: (fn) => fn(),
     FileReader: class { readAsDataURL(file) { this.result = file.data; this.onload(); } },
     URL: { createObjectURL: () => 'blob:audio', revokeObjectURL(url) { storage.released = url; } },
     Audio: class { constructor() { storage.audio = this; } pause() { this.paused = true; this.onpause?.(); } async play() { if (storage.playDenied) throw new Error('Playback blocked'); this.onplaying?.(); } },
@@ -376,7 +376,7 @@ test('a new conversation discards stale API responses and preserves request snap
   const $ = page(10, () => {}, storage); setup($, 'gf');
   $('text').value = 'Original'; $('context').value = 'Old context';
   const pending = $('go').onclick(); $('text').value = 'Edited while waiting'; release(); await pending;
-  assert.equal($('conversationLog').children[0].children[0].textContent.includes('Original'), true);
+  assert.equal($('conversationLog').children[0].children[1].children[1].textContent.includes('Original'), true);
   $('chooseReply').onclick();
   storage.pendingResult = new Promise(resolve => { release = resolve; }); $('text').value = 'Next';
   const old = $('go').onclick(); $('newConversation').onclick(); release(); await old;
@@ -388,4 +388,58 @@ test('corrupt history does not erase preferences or overwrite stored history on 
   const $ = page(0, () => {}, storage);
   assert.equal($('app').hidden, false); assert.equal(storage.history, '[{"turns":[]}]');
   assert.match($('historyStatus').textContent, /Không thể đọc/);
+});
+
+test('onboarding opens on the letter flow by default', () => {
+  assert.equal(page(10, undefined, { flow: null }).run('flow'), 'letter');
+});
+
+test('result choices expose selected state and chat separates their words, chosen reply and analysis', async () => {
+  const storage = {};
+  const $ = page(25, () => {}, storage); setup($, 'gf');
+  $('text').value = '<b>Lời người ấy</b>'; await $('go').onclick();
+  assert.equal($('chooseReply').textContent, 'Chọn & hỏi tiếp');
+  assert.equal($('chooseReply')['aria-pressed'], 'false');
+  $('chooseAvoid').onclick();
+  assert.equal($('chooseAvoid').textContent, '✓ Đã chọn');
+  assert.equal($('chooseAvoid')['aria-pressed'], 'true');
+  const turn = $('conversationLog').children[0];
+  assert.equal(turn.children[1].className, 'message incoming');
+  assert.equal(turn.children[1].children[1].textContent, '<b>Lời người ấy</b>');
+  assert.equal(turn.children[2].className, 'message outgoing');
+  assert.equal(turn.children[2].children[1].textContent, 'Đừng nói');
+  assert.equal(turn.children[3].tagName, 'DETAILS');
+  assert.equal(turn.children[3].children[0].textContent, 'Xem phân tích & gợi ý');
+  assert.equal($('historyList').children[0]['aria-current'], 'true');
+});
+
+test('save button distinguishes saved and failed saves in both locales', async () => {
+  const storage = {};
+  const $ = page(25, () => {}, storage); setup($, 'bf', 'en', 'Alex');
+  $('text').value = 'Hello'; await $('go').onclick();
+  assert.equal($('saveConversation').textContent, 'Save result');
+  storage.denied = true; $('chooseReply').onclick();
+  assert.equal($('saveConversation').textContent, 'Retry saving');
+  storage.denied = false; $('saveConversation').onclick();
+  assert.equal($('saveConversation').textContent, '✓ Saved');
+});
+
+test('one timeline owns the active result and collapses it after choosing, without losing old turns', async () => {
+  const $ = page(25); setup($, 'gf');
+  $('text').value = 'First'; await $('go').onclick();
+  let row = $('conversationLog').children[0];
+  assert.equal(row.children[2].open, true);
+  assert.equal(row.children[2].children[1], $('out'));
+  $('chooseReply').onclick();
+  row = $('conversationLog').children[0];
+  assert.equal(row.children[3].open, false);
+  assert.equal(row.children[3].children[1], $('out'));
+  assert.equal(row.children[2].children.at(-1), $('chosenResponse'));
+  $('text').value = 'Next'; await $('go').onclick();
+  assert.equal($('conversationLog').children.length, 2);
+  assert.notEqual($('conversationLog').children[0].children[3].children[1], $('out'));
+  assert.equal($('conversationLog').children[1].children[2].children[1], $('out'));
+  $('newConversation').onclick();
+  assert.equal($('conversationLog').children.length, 0);
+  assert.equal($('resultDock').children.includes($('out')), true);
 });

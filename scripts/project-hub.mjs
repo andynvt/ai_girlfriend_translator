@@ -74,25 +74,8 @@ export function createHub({ root = fileURLToPath(new URL('../', import.meta.url)
   async function perform(body) {
     if (!body || typeof body !== 'object' || Array.isArray(body)) throw bad('Request không hợp lệ.');
     const { task } = body;
-    if (!['test', 'local', 'stop', 'model', 'deploy', 'demo', 'demo-answer', 'demo-stop', 'demo-access'].includes(task)) throw bad('Task không hợp lệ.');
+    if (!['test', 'local', 'stop', 'model', 'deploy', 'demo', 'demo-answer', 'demo-stop'].includes(task)) throw bad('Task không hợp lệ.');
     if (task === 'stop') { stop(job); stop(local); return state(); }
-    if (task === 'demo-access') {
-      const vars = await env();
-      let target;
-      try { target = new URL(vars.DEMO_APP_URL); } catch { throw bad('Cấu hình DEMO_APP_URL trong .env trước.'); }
-      if (target.protocol !== 'https:' || target.username || target.password || target.pathname !== '/' || target.search || target.hash) throw bad('DEMO_APP_URL phải là HTTPS origin, không có path/query hoặc thông tin đăng nhập.');
-      if (!vars.DEMO_ADMIN_TOKEN) throw bad('Thiếu DEMO_ADMIN_TOKEN trong .env.');
-      if (body.public !== undefined && typeof body.public !== 'boolean') throw bad('public phải là boolean.');
-      const response = await fetch(new URL('/api/demo-access', target), {
-        method: body.public === undefined ? 'GET' : 'POST', redirect: 'error',
-        headers: { Authorization: `Bearer ${vars.DEMO_ADMIN_TOKEN}`, 'Content-Type': 'application/json' },
-        ...(body.public === undefined ? {} : { body: JSON.stringify({ public: body.public }) }),
-        signal: AbortSignal.timeout(10000),
-      }).catch(() => { throw bad('Không kết nối được app demo.', 502); });
-      const data = await response.json().catch(() => { throw bad('App chưa có API demo-access.', 502); });
-      if (!response.ok || typeof data.public !== 'boolean') throw bad('Không điều khiển được public. Kiểm tra API demo-access, token và Redis ở app đã deploy.', 502);
-      return { public: data.public, expiresIn: data.expiresIn, url: target.href };
-    }
     if (task === 'demo-stop') { if (job?.kind === 'demo') { stop(job); job.prompt = null; } return state(); }
     if (task === 'demo-answer') {
       if (job?.kind !== 'demo' || !running(job) || !job.prompt || body.id !== job.prompt.id) throw bad('Bước xác nhận đã thay đổi. Đợi Hub cập nhật rồi thử lại.', 409);
@@ -157,6 +140,29 @@ export function createHub({ root = fileURLToPath(new URL('../', import.meta.url)
       res.setHeader('X-Content-Type-Options', 'nosniff');
       res.setHeader('X-Frame-Options', 'DENY');
       const path = req.url.split('?')[0];
+      if (req.method === 'GET' && path.startsWith('/demo-app/')) {
+        const asset = path.slice('/demo-app/'.length);
+        if (asset && !/^(?:(?:css|js)\/[a-z0-9-]+\.(?:css|js)|assets\/tim-bot\/(?:concept-v1\/)?[a-z0-9-]+\.png)$/.test(asset)) throw bad('Không tìm thấy.', 404);
+        let content = await readFile(resolve(root, asset || 'index.html'));
+        if (!asset) content = Buffer.from(content.toString().replace('<head>', '<head><base href="/demo-app/"><style>:root{--font:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif!important}body{font-size:22px!important}.hint,.field-label,.card h3{font-size:18px!important}</style>'));
+        res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+        res.writeHead(200, { 'Content-Type': !asset ? 'text/html; charset=utf-8' : asset.endsWith('.css') ? 'text/css' : asset.endsWith('.js') ? 'text/javascript' : 'image/png', 'Cache-Control': 'no-store' });
+        return res.end(content);
+      }
+      if (['/api/translate', '/api/speak', '/api/onboarding', '/hub/app-health'].includes(path)) {
+        if (req.headers.origin && req.headers.origin !== origin) throw bad('Không được phép.', 403);
+        const health = path === '/hub/app-health';
+        if (health ? req.method !== 'GET' : req.method !== 'POST' || req.headers.origin !== origin || !req.headers['content-type']?.startsWith('application/json')) throw bad('Request không hợp lệ.', 403);
+        let body = '';
+        for await (const chunk of req) { body += chunk; if (body.length > 6000000) throw bad('Request quá lớn.', 413); }
+        const upstream = await fetch('http://127.0.0.1:3000' + (health ? '/' : path), {
+          method: health ? 'GET' : 'POST', redirect: 'error',
+          headers: { 'Content-Type': 'application/json' }, ...(health ? {} : { body }), signal: AbortSignal.timeout(health ? 2000 : 60000),
+        }).catch(() => { throw bad('App local chưa sẵn sàng. Bấm Khởi động app trên slide demo.', 503); });
+        if (health) return json(upstream.ok ? 200 : 503, { ready: upstream.ok });
+        res.writeHead(upstream.status, { 'Content-Type': upstream.headers.get('content-type') || 'application/json', 'Cache-Control': 'no-store' });
+        return res.end(Buffer.from(await upstream.arrayBuffer()));
+      }
       const files = { '/demo-slides.md': 'docs/demo-slides.md', '/demo-slides.html': 'docs/demo-slides.html', '/manual-onboarding.md': 'docs/manual-onboarding.md', '/': 'docs/project-hub.html', '/hub-tools.js': 'docs/hub-tools.js', '/manual-test.md': 'docs/manual-test.md', '/superpowers/plans/2026-10-11-thong-dich-tinh-yeu.md': 'docs/superpowers/plans/2026-10-11-thong-dich-tinh-yeu.md', '/design/design-system.md': 'docs/design/design-system.md' };
       if (req.method === 'GET' && files[path]) {
         let content = await readFile(resolve(root, files[path]), 'utf8');

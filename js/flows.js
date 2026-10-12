@@ -3,8 +3,8 @@ const FLOW_KEY = 'love-interpreter.onboarding-flow.v1';
 const FLOW_VIEWS = { wizard: 'setupForm', letter: 'letterFlow', chat: 'chatFlow', swipe: 'swipeFlow' };
 const FLOW_LABELS = { wizard: 'Từng bước', letter: 'Lá thư', chat: 'Phỏng vấn', swipe: 'Quẹt thẻ' };
 const FLOW_INTROS = { letter: 'Viết giúp Tim lá thư làm quen nhé ✍️ Khoanh tròn và điền tên vào chỗ trống.', chat: 'Trả lời Tim trong khung chat bên dưới nhé 💬', swipe: 'Quẹt trái hoặc phải để chọn nhé 👆' };
-let flow = 'wizard', flowRun = 0, swipeStep = 0, swipeLeaving = false;
-try { const saved = localStorage.getItem(FLOW_KEY); if (Object.hasOwn(FLOW_VIEWS, saved)) flow = saved; } catch { /* Wizard stays the default. */ }
+let flow = 'letter', flowRun = 0, swipeStep = 0, swipeLeaving = false;
+try { const saved = localStorage.getItem(FLOW_KEY); if (Object.hasOwn(FLOW_VIEWS, saved)) flow = saved; } catch { /* Letter stays the default. */ }
 const tr = (vi, en) => language === 'en' ? en : vi;
 const pause = ms => new Promise(resolve => setTimeout(resolve, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : ms));
 function timSays(text, state) { $('setupBubble').textContent = text; animateBot($('setupBot'), state); }

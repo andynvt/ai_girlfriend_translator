@@ -74,8 +74,10 @@ export async function snapshot(page) {
 export async function prepareApp(page) {
   const setup = page.locator('#onboarding');
   if (await setup.count()) {
-    if (!(await setup.isVisible())) await page.locator('#settings').click();
+    if (!(await setup.isVisible())) { await page.locator('#chatTools > summary').click(); await page.locator('#settings').click(); }
     if (await setup.isVisible()) {
+      // The runner fills the step-by-step form; the app defaults to the letter flow.
+      if (await page.locator('#setupForm').isHidden()) { await page.locator('#flowToggle').click(); await page.locator('[data-flow="wizard"]').click(); }
       await page.locator('#setupLanguage').selectOption('vi');
       await page.locator('#setupNext').click();
       await page.locator('#chooseGf').click();

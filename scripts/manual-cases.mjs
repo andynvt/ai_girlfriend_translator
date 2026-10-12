@@ -5,7 +5,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
   const $ = selector => page.locator(selector);
   const chooseDirection = async direction => {
     if (await page.evaluate(value => dir === value && !document.getElementById('app').hidden, direction)) return;
-    if (!(await $('#onboarding').isVisible())) await $('#settings').click();
+    if (!(await $('#onboarding').isVisible())) { await $('#chatTools > summary').click(); await $('#settings').click(); }
     await $('#setupLanguage').selectOption('vi');
     await $('#setupNext').click();
     await $(direction === 'bf' ? '#chooseBf' : '#chooseGf').click();
@@ -18,7 +18,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
   const fill = async (text, context = '', direction = 'gf') => {
     await chooseDirection(direction);
     await $('#text').fill(text);
-    await $('#context').fill(context);
+    await page.evaluate(() => { document.getElementById('contextMenu').open = true; }); await $('#context').fill(context);
   };
   const error = async text => {
     await $('#err').waitFor({ state: 'visible' });
@@ -56,7 +56,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
     await capture();
     return request;
   };
-  const successful = async (text = 'Tùy anh', ctx = '', dir = 'gf') => { await $('#newConversation').click(); await fill(text, ctx, dir); return decode(); };
+  const successful = async (text = 'Tùy anh', ctx = '', dir = 'gf') => { await page.evaluate(() => { document.getElementById('chatTools').open = true; }); await $('#newConversation').click(); await fill(text, ctx, dir); return decode(); };
   switch (id) {
     case 'tc01':
       await step('Select the sample meaning Whatever you want. Leave context empty and verify that it has not been submitted.', async () => {
@@ -81,7 +81,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
         await chooseDirection('bf');
         assert.deepEqual(await $('#chips button').allTextContents(), ['Anh bận chút', 'Ừ', 'Để anh suy nghĩ đã']);
         await page.getByRole('button', { name: 'Anh bận chút', exact: true }).click();
-        await $('#context').fill('Anh đang họp ở công ty, mình hỏi tối nay ăn gì.');
+        await page.evaluate(() => { document.getElementById('contextMenu').open = true; }); await $('#context').fill('Anh đang họp ở công ty, mình hỏi tối nay ăn gì.');
         const request = await decode();
         assert.equal(request.direction, 'bf'); assert.equal(request.context, await $('#context').inputValue());
         await chooseDirection('gf');
@@ -93,7 +93,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
         await successful(); const old = await $('#meaning').textContent();
         for (const text of ['', '   ']) {
           await fill(text, 'Hai người vừa cãi nhau.'); await decode('Nhập câu nói hoặc chọn ảnh');
-          assert.equal(await $('#out').isVisible(), true); assert.equal(await $('#meaning').textContent(), old);
+          assert.ok(await $('#conversationLog .incoming').count()); assert.equal(await $('#meaning').textContent(), old);
         }
       });
       break;
@@ -113,7 +113,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
       break;
     case 'tc06':
       await step('Type beyond the limits and submit at five hundred message characters and one thousand context characters.', async () => {
-        await $('#text').pressSequentially('a'.repeat(501)); await $('#context').pressSequentially('b'.repeat(1001));
+        await $('#text').pressSequentially('a'.repeat(501)); await page.evaluate(() => { document.getElementById('contextMenu').open = true; }); await $('#context').pressSequentially('b'.repeat(1001));
         assert.equal((await $('#text').inputValue()).length, 500); assert.equal((await $('#context').inputValue()).length, 1000);
         await decode();
       });
@@ -131,7 +131,7 @@ export async function executeCase(id, { page, context, step, manual, capture, ch
         await $('#text').fill('Em không sao đâu');
         await ready();
         await context.setOffline(true);
-        try { await $('#go').click(); await error(''); assert.equal(await $('#out').isVisible(), true); assert.equal(await $('#meaning').textContent(), old); }
+        try { await $('#go').click(); await error(''); assert.ok(await $('#conversationLog .incoming').count()); assert.equal(await $('#meaning').textContent(), old); }
         finally { await context.setOffline(false); }
         await capture();
       });

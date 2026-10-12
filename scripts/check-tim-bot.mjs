@@ -20,6 +20,7 @@ try {
   browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 375, height: 850 }, reducedMotion: 'no-preference' });
   page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => { const key = 'love-interpreter.onboarding-flow.v1'; if (!localStorage.getItem(key)) localStorage.setItem(key, 'wizard'); });
   await page.addInitScript(() => {
     window.Audio = class {
       constructor() { window.testAudio = this; }

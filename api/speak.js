@@ -1,4 +1,3 @@
-import { checkDemoAccess } from '../lib/demo-access.js';
 import { message, parseLanguage } from '../lib/preferences.js';
 import { rateLimit, tooMany } from '../lib/rate-limit.js';
 
@@ -6,7 +5,6 @@ export default async function handler(req, res) {
   let language;
   try { language = parseLanguage(req.body?.language); } catch (e) { return res.status(400).json({ error: e.message }); }
   if (req.method !== 'POST') return res.status(405).json({ error: message(language, 'Chỉ nhận POST', 'POST only') });
-  if (!(await checkDemoAccess(req, res))) return;
   if (!(await rateLimit(req, 'speak'))) return res.status(429).json({ error: tooMany(language) });
   const text = typeof req.body?.text === 'string' ? req.body.text.trim() : '';
   if (!text || text.length > 500) return res.status(400).json({ error: message(language, 'Không có gì để đọc.', 'Enter up to 500 characters to read.') });

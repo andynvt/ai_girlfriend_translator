@@ -34,3 +34,17 @@ Kiểm tra 375px và desktop, nội dung dài, bàn phím, giảm chuyển độ
 ### Tim onboarding
 
 Bot và speech bubble đặt cạnh nhau. Mỗi màn một quyết định: ngôn ngữ, thẻ người ấy, tên, xác nhận. Chip hiển thị lựa chọn trước; Back giữ giá trị, lỗi dùng role=alert, bubble dùng aria-live=polite. Bản Việt/English có cùng luồng. Bubble trong màn nhập nhắc gửi lời nhắn hoặc ảnh chat. Transition 250ms và sprite dùng thiết lập reduced-motion hiện có.
+
+### Lựa chọn kết quả và lịch sử · 12/10/2026
+
+Header kết quả nêu câu hỏi, hai thẻ cùng khoảng cách/bo góc. Hành động chính “Chọn & hỏi tiếp”, câu cần tránh dùng nút viền; lựa chọn hiện “✓ Đã chọn” cùng aria-pressed. Nút lưu phụ hiển thị thành công/thử lại theo storage thực tế.
+
+Lịch sử kiểu iMessage: lời người ấy bên trái xám, câu bạn chọn/gửi bên phải xanh (#1264d6); nhãn phân biệt lựa chọn chưa xác nhận gửi. Phân tích trong details/summary hỗ trợ bàn phím, không lẫn với tin nhắn. Danh sách cuộc có preview/thời gian và trạng thái đang xem; sidebar desktop, cuộn ngang mobile. Không thay schema lưu trữ hoặc API.
+
+### Màn chat hợp nhất · 12/10/2026
+
+App dùng một khung chat cao theo 100dvh, header tên/lượt và composer tách khỏi vùng cuộn. Lịch sử và tùy chọn mở bằng details ở header; ảnh/bối cảnh mở qua ＋. Tin đến xám bên trái, câu chọn/gửi xanh bên phải, nhãn phân biệt chưa xác nhận gửi. Phân tích Tim nằm tại cùng lượt, mở khi chưa chọn và thu gọn sau chọn; các lượt cũ chỉ giữ phần mở rộng. Không dựng thêm kết quả ở panel riêng. UI chat thay bố cục hai cột và sidebar lịch sử mô tả ở phần trước; onboarding giữ giao diện hiện có.
+
+### Responsive mobile · 12/10/2026
+
+Chat fullscreen đến 768px, một vùng cuộn bên trong; header tên một dòng ellipsis, composer có safe-area. Vùng bấm summary tối thiểu 44px, ô sửa phản hồi font 16px. Composer dùng field-sizing: content (browser không hỗ trợ giữ textarea vốn có), tối đa 96px và 48px khi màn thấp. Bối cảnh mở dưới dạng sheet có nút Xong; header menu neo trong khung chat. Kiểm thêm 320px, xoay ngang và viewport thấp; bàn phím/notch/browser bar thật cần manual.

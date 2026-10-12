@@ -4,49 +4,97 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><!--HUB_TOKEN-->
 <title>Demo · Thông Dịch Viên Tình Yêu</title>
 <style>
-:root{--ink:#302332;--muted:#796678;--pink:#b4235a;--paper:#fff8f3;--line:#e6c8d6}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:#ece4e5;color:var(--ink);font:20px/1.5 system-ui,sans-serif}button,input,select{font:inherit}button,a.button{border:1px solid var(--line);border-radius:99px;padding:10px 20px;background:white;color:var(--pink);font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;min-height:44px}button.primary{background:var(--pink);color:white;border-color:var(--pink)}button:disabled{opacity:.45;cursor:not-allowed}:focus-visible{outline:3px solid #7454bb;outline-offset:4px}.slide{min-height:calc(100dvh - 78px);max-width:1600px;margin:auto;padding:clamp(28px,5vw,80px);background:var(--paper);position:relative;overflow-wrap:anywhere}.slide:nth-child(3n){background:#f0eaff}.slide:nth-child(3n + 2){background:#eff8f0}.eyebrow{font-size:14px;letter-spacing:.13em;text-transform:uppercase;font-weight:750;color:var(--pink);margin:0 0 24px}h1,h2{font-size:clamp(34px,4.5vw,70px);line-height:1.12;letter-spacing:-.045em;margin:0 0 30px;max-width:20ch}h3{font-size:clamp(22px,2.4vw,32px);line-height:1.3;margin:0 0 14px}p{margin:0 0 22px}.lead{font-size:clamp(23px,2.4vw,36px);max-width:40ch}.muted,.note{color:var(--muted)}.note{font-size:15px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,72px);align-items:start}.three{grid-template-columns:repeat(3,1fr)}.big-quote{font-size:clamp(36px,5vw,76px);font-weight:750;letter-spacing:-.03em;background:#ffe3ee;border-radius:36px;padding:38px;margin:0 0 20px}.rows{display:grid;gap:20px}.row{border-top:1px solid var(--line);padding-top:20px}.accent{color:var(--pink)}.number{font-size:52px;font-weight:800;color:var(--pink);line-height:1.2;margin-bottom:16px}.flow{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:30px 0}.flow span{background:#fff;border:1px solid var(--line);padding:22px;border-radius:18px}.flow b{color:var(--pink)}.pill{display:inline-block;border-radius:99px;background:#ffe3ee;padding:7px 14px;font-size:14px;font-weight:700;color:var(--pink)}.cover{background:#302332!important;color:#fff8f3}.cover .eyebrow,.cover .accent{color:#ffa6ca}.cover .muted{color:#dfc7d7}.heart{font-size:clamp(150px,23vw,300px);line-height:1;color:#ffa6ca;text-align:center;padding-top:30px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}label{font-size:15px;font-weight:700;display:block;margin:12px 0}input,select{display:block;width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:white;color:var(--ink);margin-top:6px;font-size:17px}pre{font:13px/1.5 ui-monospace,monospace;background:#302332;color:#fff8f3;border-radius:14px;padding:16px;max-height:180px;overflow:auto;white-space:pre-wrap}ol{padding-left:28px}li{margin:14px 0}.qr-frame{background:white;padding:24px;border-radius:28px;text-align:center;max-width:400px;margin:auto}.qr-frame img{width:100%;aspect-ratio:1;display:block}.url{font-size:17px;word-break:break-all}.status{font-size:18px;font-weight:700}.controls{height:78px;position:sticky;bottom:0;background:#302332;color:#fff8f3;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 24px;z-index:5}.controls button{background:transparent;color:#fff8f3;border-color:#735970}.controls .pages{font-size:15px;white-space:nowrap}progress{position:fixed;bottom:0;left:0;width:100%;height:4px;accent-color:#ffa6ca;z-index:10;border:0}details{font-size:15px;margin-top:22px}summary{cursor:pointer;color:var(--pink)}code{font-size:14px}#toast{position:fixed;right:20px;top:20px;max-width:420px;background:#302332;color:white;padding:12px 18px;border-radius:14px;font-size:16px;z-index:20}a{color:var(--pink)}@media(max-width:760px){body{font-size:18px}.grid,.three{grid-template-columns:1fr}.heart{display:none}.slide{padding:28px 22px}h1,h2{margin-bottom:22px}.controls{padding:10px}.controls button{font-size:14px;padding:8px 12px}.controls .hint{display:none}.big-quote{padding:24px}.flow span{padding:14px}.qr-frame{max-width:320px}}@media print{.slide[hidden]{display:block!important}.slide{height:100vh;break-after:page}.controls,progress,button,details,#toast,pre{display:none!important}.slide{background:white!important;color:#302332!important}}
+:root{--ink:#302332;--muted:#796678;--pink:#b4235a;--paper:#fff8f3;--line:#e6c8d6;--font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:#ece4e5;color:var(--ink);font:clamp(22px,2vw,28px)/1.45 var(--font);-webkit-font-smoothing:antialiased}button,input,select{font:inherit}button,a.button{border:1px solid var(--line);border-radius:99px;padding:10px 20px;background:white;color:var(--pink);font-size:22px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;min-height:44px}button.primary{background:var(--pink);color:white;border-color:var(--pink)}button:disabled{opacity:.45;cursor:not-allowed}:focus-visible{outline:3px solid #7454bb;outline-offset:4px}.slide{min-height:calc(100dvh - 90px);max-width:1600px;margin:auto;padding:clamp(28px,5vw,80px);background:var(--paper);position:relative;overflow-wrap:anywhere}.slide:nth-child(3n){background:#f0eaff}.slide:nth-child(3n + 2){background:#eff8f0}.eyebrow{font-size:20px;letter-spacing:.13em;text-transform:uppercase;font-weight:750;color:var(--pink);margin:0 0 24px}h1,h2{font-size:clamp(34px,4.5vw,70px);line-height:1.12;letter-spacing:-.045em;margin:0 0 30px;max-width:20ch}h3{font-size:clamp(22px,2.4vw,32px);line-height:1.3;margin:0 0 14px}p{margin:0 0 22px}.lead{font-size:clamp(23px,2.4vw,36px);max-width:40ch}.muted,.note{color:var(--muted)}.note{font-size:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,72px);align-items:start}.three{grid-template-columns:repeat(3,1fr)}.big-quote{font-size:clamp(36px,5vw,76px);font-weight:750;letter-spacing:-.03em;background:#ffe3ee;border-radius:36px;padding:38px;margin:0 0 20px}.rows{display:grid;gap:20px}.row{border-top:1px solid var(--line);padding-top:20px}.accent{color:var(--pink)}.number{font-size:52px;font-weight:800;color:var(--pink);line-height:1.2;margin-bottom:16px}.flow{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:30px 0}.flow span{background:#fff;border:1px solid var(--line);padding:22px;border-radius:18px}.flow b{color:var(--pink)}.pill{display:inline-block;border-radius:99px;background:#ffe3ee;padding:7px 14px;font-size:20px;font-weight:700;color:var(--pink)}.cover{background:#302332!important;color:#fff8f3}.cover .eyebrow,.cover .accent{color:#ffa6ca}.cover .muted{color:#dfc7d7}.heart{font-size:clamp(150px,23vw,300px);line-height:1;color:#ffa6ca;text-align:center;padding-top:30px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:18px 0}label{font-size:22px;font-weight:700;display:block;margin:12px 0}input,select{display:block;width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:white;color:var(--ink);margin-top:6px;font-size:24px}pre{font:20px/1.5 var(--font);background:#302332;color:#fff8f3;border-radius:14px;padding:16px;max-height:180px;overflow:auto;white-space:pre-wrap}ol{padding-left:28px}li{margin:14px 0}.qr-frame{background:white;padding:24px;border-radius:28px;text-align:center;max-width:400px;margin:auto}.qr-frame img{width:100%;aspect-ratio:1;display:block}.url{font-size:24px;word-break:break-all}.status{font-size:24px;font-weight:700}.controls{min-height:90px;position:sticky;bottom:0;background:#302332;color:#fff8f3;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 24px;z-index:5}.controls button{background:transparent;color:#fff8f3;border-color:#735970}.controls .pages{font-size:20px;white-space:nowrap}progress{position:fixed;bottom:0;left:0;width:100%;height:4px;accent-color:#ffa6ca;z-index:10;border:0}details{font-size:22px;margin-top:22px}summary{cursor:pointer;color:var(--pink)}code{font-size:20px}#toast{position:fixed;right:20px;top:20px;max-width:420px;background:#302332;color:white;padding:12px 18px;border-radius:14px;font-size:22px;z-index:20}a{color:var(--pink)}.live{padding:32px 48px}.live h2{font-size:clamp(34px,3.2vw,52px);max-width:none;margin-bottom:22px}.live .eyebrow{margin-bottom:14px}.demo-layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.7fr);gap:32px}.demo-panel{font-size:24px}.demo-panel .lead{font-size:28px}.demo-panel ol{margin-top:0}.demo-panel button{font-size:22px}.demo-layout iframe{width:100%;height:calc(100dvh - 260px);min-height:520px;border:1px solid var(--line);border-radius:24px;background:white}.controls .toolbar{margin:0}.slide{padding-bottom:40px}
+@media(max-width:1100px){.controls .hint{display:none}.grid{gap:30px}}
+@media(max-width:760px){body{font-size:22px}.grid,.three{grid-template-columns:1fr}.heart{display:none}.slide{padding:28px 22px}h1,h2{margin-bottom:22px}.controls{padding:10px}.controls button{font-size:16px;padding:8px 10px}.controls .hint,#fullscreen{display:none}.live{padding:28px 22px}.demo-layout{grid-template-columns:1fr}.demo-layout iframe{height:700px}.controls .pages{font-size:16px}.controls{gap:6px}.controls button{padding:8px 7px;font-size:14px}.big-quote{padding:24px}.flow span{padding:14px}.qr-frame{max-width:320px}}@media print{.slide[hidden]{display:block!important}.slide{height:100vh;break-after:page}.controls,progress,button,details,#toast,pre{display:none!important}.slide{background:white!important;color:#302332!important}}
 </style>
 </head>
 <body>
 <main>
 <section class="slide cover" aria-label="Giới thiệu">
-<p class="eyebrow">Product demo · 11/10/2026</p><div class="grid"><div><h1>Thông Dịch Viên<br><span class="accent">Tình Yêu</span></h1><p class="lead">Một lời nhắn.<br>Nhiều cách hiểu.<br>Thêm bối cảnh để trả lời tử tế hơn.</p><p class="muted">AI giải mã lời nhắn, gợi ý phản hồi và thêm một chút hài hước.</p></div><div class="heart" aria-hidden="true">♡</div></div><span class="pill">Ý tưởng → Cách làm → Demo → Cùng trải nghiệm</span>
+<p class="eyebrow" data-en='Product demo · 12/10/2026'>Product demo · 12/10/2026</p><div class="grid"><div><h1 data-en='Love<br><span class="accent">Interpreter</span>'>Thông Dịch Viên<br><span class="accent">Tình Yêu</span></h1><p class="lead" data-en='One message.<br>Many interpretations.<br>Add context to respond more thoughtfully.'>Một lời nhắn.<br>Nhiều cách hiểu.<br>Thêm bối cảnh để trả lời tử tế hơn.</p><p class="muted" data-en='AI interprets messages, suggests replies and adds a little humor.'>AI giải mã lời nhắn, gợi ý phản hồi và thêm một chút hài hước.</p></div><div class="heart" aria-hidden="true">♡</div></div><span class="pill" data-en='Idea → Approach → Demo → Try it yourself'>Ý tưởng → Cách làm → Demo → Cùng trải nghiệm</span>
 </section>
 <section class="slide" aria-label="Ý tưởng" hidden>
-<p class="eyebrow">01 · Ý tưởng</p><h2>“Em không sao đâu”<br>có nghĩa là gì?</h2><div class="grid"><div><p class="lead">Câu chữ không mang theo toàn bộ cảm xúc và bối cảnh.</p><p>Người đọc dễ đoán quá mức, phản hồi vội và làm cuộc trò chuyện căng hơn.</p></div><div class="rows"><div class="row"><h3>Đọc tình huống</h3><p>Đưa ra cách hiểu có thể xảy ra, dựa trên thông tin được cung cấp.</p></div><div class="row"><h3>Gợi ý cách trả lời</h3><p>Một câu nên nói, một câu nên tránh — ngắn và dễ thử.</p></div></div></div><p class="note">App hỗ trợ giao tiếp; AI không biết chắc suy nghĩ của người ấy.</p>
+<p class="eyebrow" data-en='01 · The idea'>01 · Ý tưởng</p><h2 data-en='What does<br>“I’m fine” mean?'>“Em không sao đâu”<br>có nghĩa là gì?</h2><div class="grid"><div><p class="lead" data-en='Words alone do not carry every emotion or all the context.'>Câu chữ không mang theo toàn bộ cảm xúc và bối cảnh.</p><p data-en='Readers can overthink, reply too quickly and make a conversation more tense.'>Người đọc dễ đoán quá mức, phản hồi vội và làm cuộc trò chuyện căng hơn.</p></div><div class="rows"><div class="row"><h3 data-en='Read the situation'>Đọc tình huống</h3><p data-en='Offer possible interpretations based on the information provided.'>Đưa ra cách hiểu có thể xảy ra, dựa trên thông tin được cung cấp.</p></div><div class="row"><h3 data-en='Suggest a reply'>Gợi ý cách trả lời</h3><p data-en='One thing to say, one thing to avoid — short and easy to try.'>Một câu nên nói, một câu nên tránh — ngắn và dễ thử.</p></div></div></div><p class="note" data-en='The app supports communication; AI cannot know what someone is thinking.'>App hỗ trợ giao tiếp; AI không biết chắc suy nghĩ của người ấy.</p>
 </section>
 <section class="slide" aria-label="Ví dụ bối cảnh" hidden>
-<p class="eyebrow">02 · Giá trị cốt lõi</p><h2>Cùng lời nhắn,<br>bối cảnh khác nhau</h2><p class="big-quote">“Em không sao đâu”</p><div class="grid"><div><h3>Vừa quên một cuộc hẹn</h3><p>Có thể người ấy vẫn buồn. Hãy nhận lỗi và hỏi cảm giác của họ.</p></div><div><h3>Vừa té nhẹ</h3><p>Có thể người ấy đang trấn an bạn. Hãy hỏi có đau và cần giúp không.</p></div></div><p class="note">Ví dụ minh họa ý tưởng; kết quả AI thực tế có thể khác.</p>
+<p class="eyebrow" data-en='02 · Core value'>02 · Giá trị cốt lõi</p><h2 data-en='Same message,<br>different context'>Cùng lời nhắn,<br>bối cảnh khác nhau</h2><p class="big-quote" data-en='“I’m fine”'>“Em không sao đâu”</p><div class="grid"><div><h3 data-en='You just forgot a date'>Vừa quên một cuộc hẹn</h3><p data-en='They may still feel hurt. Acknowledge the mistake and ask how they feel.'>Có thể người ấy vẫn buồn. Hãy nhận lỗi và hỏi cảm giác của họ.</p></div><div><h3 data-en='They just had a minor fall'>Vừa té nhẹ</h3><p data-en='They may be reassuring you. Ask if they are hurt or need help.'>Có thể người ấy đang trấn an bạn. Hãy hỏi có đau và cần giúp không.</p></div></div><p class="note" data-en='An illustration of the idea; actual AI results may differ.'>Ví dụ minh họa ý tưởng; kết quả AI thực tế có thể khác.</p>
 </section>
 <section class="slide" aria-label="Cách làm" hidden>
-<p class="eyebrow">03 · Cách làm</p><h2>Giữ luồng dùng ngắn,<br>đưa bối cảnh vào AI</h2><div class="flow"><span>Thiết lập người ấy</span><b>→</b><span>Lời nhắn / ảnh + bối cảnh</span><b>→</b><span>API + AI</span><b>→</b><span>Gợi ý phản hồi</span></div><div class="grid"><div class="row"><h3>Đầu vào có kiểm tra</h3><p>Giới hạn văn bản, ảnh và lịch sử. Tên, lời nhắn và chữ trong ảnh được xử lý như dữ liệu.</p></div><div class="row"><h3>Đầu ra có cấu trúc</h3><p>Ý nghĩa có thể có, mức căng thẳng 0–100, câu nên trả lời và câu nên tránh.</p></div></div><p class="note">Chọn gợi ý để hỏi tiếp; app chỉ ghi nhận đã gửi khi người dùng xác nhận.</p>
+<p class="eyebrow" data-en='03 · How it works'>03 · Cách làm</p><h2 data-en='Keep the flow short,<br>give AI the context'>Giữ luồng dùng ngắn,<br>đưa bối cảnh vào AI</h2><div class="flow"><span data-en='Set up their profile'>Thiết lập người ấy</span><b>→</b><span data-en='Message / image + context'>Lời nhắn / ảnh + bối cảnh</span><b>→</b><span data-en='API + AI'>API + AI</span><b>→</b><span data-en='Suggested reply'>Gợi ý phản hồi</span></div><div class="grid"><div class="row"><h3 data-en='Validated input'>Đầu vào có kiểm tra</h3><p data-en='Limits on text, images and history. Names, messages and text in images are treated as data.'>Giới hạn văn bản, ảnh và lịch sử. Tên, lời nhắn và chữ trong ảnh được xử lý như dữ liệu.</p></div><div class="row"><h3 data-en='Structured output'>Đầu ra có cấu trúc</h3><p data-en='Possible meaning, tension level from 0–100, a suggested reply and a reply to avoid.'>Ý nghĩa có thể có, mức căng thẳng 0–100, câu nên trả lời và câu nên tránh.</p></div></div><p class="note" data-en='Select a suggestion to continue; the app only records a reply as sent when the user confirms it.'>Chọn gợi ý để hỏi tiếp; app chỉ ghi nhận đã gửi khi người dùng xác nhận.</p>
 </section>
 <section class="slide" aria-label="Công nghệ" hidden>
-<p class="eyebrow">04 · Công nghệ</p><h2>Web gọn,<br>AI chạy qua server</h2><div class="grid three"><div><div class="number">01</div><h3>Giao diện</h3><p>HTML · CSS · JavaScript thuần</p><p class="muted">Pastel, Tim Bot, responsive và lịch sử lưu trên thiết bị.</p></div><div><div class="number">02</div><h3>Backend &amp; AI</h3><p>Node.js API · Vercel · OpenAI</p><p class="muted">JSON Schema cho kết quả, đọc ảnh, speech-to-text và text-to-speech.</p></div><div><div class="number">03</div><h3>Kiểm tra &amp; truy cập</h3><p>Node test · Playwright · Upstash Redis</p><p class="muted">Runner tự động, giới hạn lượt theo IP và trạng thái public dùng chung.</p></div></div><p class="note">Model giải mã được cấu hình ở server. App Flutter đang phát triển và dùng chung API.</p>
+<p class="eyebrow" data-en='04 · Technology'>04 · Công nghệ</p><h2 data-en='A lightweight web app,<br>AI through the server'>Web gọn,<br>AI chạy qua server</h2><div class="grid three"><div><div class="number">01</div><h3 data-en='Interface'>Giao diện</h3><p data-en='HTML · CSS · Plain JavaScript'>HTML · CSS · JavaScript thuần</p><p class="muted" data-en='Pastel colors, Tim Bot, responsive layout and history stored on your device.'>Pastel, Tim Bot, responsive và lịch sử lưu trên thiết bị.</p></div><div><div class="number">02</div><h3 data-en='Backend &amp;amp; AI'>Backend &amp; AI</h3><p data-en='Node.js API · Vercel · OpenAI'>Node.js API · Vercel · OpenAI</p><p class="muted" data-en='JSON Schema output, image understanding, speech-to-text and text-to-speech.'>JSON Schema cho kết quả, đọc ảnh, speech-to-text và text-to-speech.</p></div><div><div class="number">03</div><h3 data-en='Testing &amp;amp; access'>Kiểm tra &amp; truy cập</h3><p data-en='Node test · Playwright'>Node test · Playwright</p><p class="muted" data-en='Automated checks and access managed in Vercel Console.'>Kiểm tra tự động và truy cập do người trình bày quản lý trong Vercel Console.</p></div></div><p class="note" data-en='The interpretation model is configured on the server. The Flutter app is in development and shares the same API.'>Model giải mã được cấu hình ở server. App Flutter đang phát triển và dùng chung API.</p>
 </section>
 <section class="slide" aria-label="Chức năng" hidden>
-<p class="eyebrow">05 · Chức năng hiện có</p><h2>Từ lời nhắn<br>đến cuộc trò chuyện tiếp theo</h2><div class="grid"><div class="rows"><div class="row"><h3>Thiết lập bằng tay hoặc voice</h3><p>Tiếng Việt / English, bạn gái / bạn trai, tên người ấy.</p></div><div class="row"><h3>Giải mã chữ và ảnh chat</h3><p>Thêm bối cảnh, nhận gợi ý và đọc kết quả bằng giọng nói.</p></div></div><div class="rows"><div class="row"><h3>Chọn nhánh phản hồi</h3><p>“Nên trả lời” hoặc “Tuyệt đối đừng nói”, rồi tiếp tục theo lịch sử.</p></div><div class="row"><h3>Lưu và mở lại</h3><p>Lịch sử trên thiết bị, cuộc trò chuyện mới và xóa cuộc cũ.</p></div></div></div><p class="note">Mic, âm thanh và chất lượng gợi ý cần đánh giá trên thiết bị thật.</p>
+<p class="eyebrow" data-en='05 · Current features'>05 · Chức năng hiện có</p><h2 data-en='From a message<br>to the next turn'>Từ lời nhắn<br>đến cuộc trò chuyện tiếp theo</h2><div class="grid"><div class="rows"><div class="row"><h3 data-en='Set up by typing or voice'>Thiết lập bằng tay hoặc voice</h3><p data-en='Vietnamese / English, girlfriend / boyfriend and their name.'>Tiếng Việt / English, bạn gái / bạn trai, tên người ấy.</p></div><div class="row"><h3 data-en='Interpret text and chat images'>Giải mã chữ và ảnh chat</h3><p data-en='Add context, receive suggestions and listen to results.'>Thêm bối cảnh, nhận gợi ý và đọc kết quả bằng giọng nói.</p></div></div><div class="rows"><div class="row"><h3 data-en='Choose a reply branch'>Chọn nhánh phản hồi</h3><p data-en='“Suggested reply” or “What to avoid”, then continue with conversation history.'>“Nên trả lời” hoặc “Tuyệt đối đừng nói”, rồi tiếp tục theo lịch sử.</p></div><div class="row"><h3 data-en='Save and resume'>Lưu và mở lại</h3><p data-en='On-device history, new conversations and deletion of older conversations.'>Lịch sử trên thiết bị, cuộc trò chuyện mới và xóa cuộc cũ.</p></div></div></div><p class="note" data-en='Microphone, audio and suggestion quality need evaluation on real devices.'>Mic, âm thanh và chất lượng gợi ý cần đánh giá trên thiết bị thật.</p>
 </section>
 <section class="slide" aria-label="Hướng mở rộng" hidden>
-<p class="eyebrow">06 · Hướng mở rộng</p><h2>Thử với người dùng,<br>rồi mở rộng đúng nhu cầu</h2><div class="grid three"><div><div class="number">01</div><h3>Hoàn thiện mobile</h3><p>Tiếp tục bản Flutter iOS/Android, kiểm tra mic, ảnh và audio trên máy thật.</p></div><div><div class="number">02</div><h3>Đánh giá chất lượng</h3><p>Thêm tình huống tiếng lóng, bối cảnh mâu thuẫn và phản hồi từ người dùng.</p></div><div><div class="number">03</div><h3>Mở rộng khi cần</h3><p>Cân nhắc đồng bộ lịch sử, thêm ngôn ngữ và kiểm soát ngân sách demo.</p></div></div><p class="note">Đây là hướng phát triển; đồng bộ và các ngôn ngữ mới chưa được triển khai.</p>
+<p class="eyebrow" data-en='06 · Future development'>06 · Hướng mở rộng</p><h2 data-en='Test with users,<br>expand around real needs'>Thử với người dùng,<br>rồi mở rộng đúng nhu cầu</h2><div class="grid three"><div><div class="number">01</div><h3 data-en='Finish the mobile app'>Hoàn thiện mobile</h3><p data-en='Continue Flutter for iOS/Android; test microphone, images and audio on real devices.'>Tiếp tục bản Flutter iOS/Android, kiểm tra mic, ảnh và audio trên máy thật.</p></div><div><div class="number">02</div><h3 data-en='Evaluate quality'>Đánh giá chất lượng</h3><p data-en='Add slang, conflicting context and user feedback to the test cases.'>Thêm tình huống tiếng lóng, bối cảnh mâu thuẫn và phản hồi từ người dùng.</p></div><div><div class="number">03</div><h3 data-en='Expand when needed'>Mở rộng khi cần</h3><p data-en='Consider history sync, more languages and demo budget controls.'>Cân nhắc đồng bộ lịch sử, thêm ngôn ngữ và kiểm soát ngân sách demo.</p></div></div><p class="note" data-en='These are planned directions; history sync and additional languages are not implemented.'>Đây là hướng phát triển; đồng bộ và các ngôn ngữ mới chưa được triển khai.</p>
 </section>
-<section class="slide" aria-label="Demo tự động" hidden>
-<p class="eyebrow">07 · Live demo / Tự động</p><h2>Xem app xử lý<br>ba tình huống</h2><div class="grid"><div><ol><li>Lời nhắn thiếu bối cảnh</li><li>Cùng câu, hai bối cảnh</li><li>Ảnh chụp đoạn chat giả</li></ol><p class="note">Runner mở cửa sổ app và thao tác thật. Kết quả AI có thể phát sinh phí; kiểm tra tự động không chấm chất lượng nội dung.</p><p class="note">Nếu app demo đang bật khóa truy cập, mở public ở slide cuối trước khi chạy.</p></div><div><label>App để trình diễn<input id="demoUrl" type="url" value="http://127.0.0.1:3000" required></label><label>Lời dẫn<select id="voice"><option value="off">Không đọc lời dẫn</option><option value="mac">Samantha · English · 1,15×</option></select></label><div class="toolbar"><button class="primary" id="run" disabled>Chạy demo tự động</button><button id="stop" disabled>Dừng demo</button></div><p id="runStatus" class="status" role="status">Mở qua Hub để chạy runner.</p><pre id="log" tabindex="0" aria-label="Log demo">Log runner sẽ xuất hiện ở đây.</pre></div></div>
+<section class="slide live" aria-label="Demo tự động" hidden>
+<p class="eyebrow" data-en='07 · Live demo / Automatic'>07 · Live demo / Tự động</p><h2 data-en='Watch the app handle three scenarios'>Xem app xử lý ba tình huống</h2>
+<div class="demo-layout"><div class="demo-panel"><ol><li data-en='A message without context'>Lời nhắn thiếu bối cảnh</li><li data-en='Same message, two contexts'>Cùng câu, hai bối cảnh</li><li data-en='A synthetic chat screenshot'>Ảnh chụp đoạn chat giả</li></ol>
+<div class="toolbar"><button id="startLocal" data-en='Start app'>Khởi động app</button><button class="primary" id="run" disabled data-en='Run automatically'>Chạy tự động</button><button id="stop" disabled data-en='Stop'>Dừng</button></div>
+<p id="runStatus" class="status" role="status" data-en='Open these slides through Hub to run the demo.'>Mở slide qua Hub để chạy demo.</p><p class="note" data-en='The real app runs in the frame. Each result stays for 5 seconds; AI calls may incur charges.'>Dùng app thật trong khung bên cạnh. Mỗi kết quả giữ 5 giây để cả phòng xem; có thể phát sinh phí AI.</p><p class="note" data-en='Audience access is managed separately in Vercel Console.'>Truy cập của khán giả được quản lý riêng trong Vercel Console.</p><details><summary data-en='Demo log'>Nhật ký demo</summary><pre id="log" tabindex="0" aria-label="Log demo" data-en='Ready.'>Sẵn sàng.</pre></details></div>
+<iframe id="autoApp" title="App demo tự động" allow="microphone" data-demo-frame></iframe></div>
 </section>
-<section class="slide" aria-label="Demo với khán giả" hidden>
-<p class="eyebrow">08 · Live demo / Cùng khán giả</p><h2>Mời một bạn<br>làm người giải mã</h2><div class="grid"><div><p class="lead">“Bạn chọn một lời nhắn và kể thêm bối cảnh. Cả phòng đoán trước khi AI trả lời nhé!”</p><div class="toolbar"><button class="primary" id="openApp">Mở app để demo manual ↗</button></div><p class="note">Mở URL ở slide demo tự động. Chỉ dùng tình huống giả hoặc dữ liệu đã được đồng ý chia sẻ.</p></div><div class="rows"><div class="row"><h3>1 · Khán giả chọn</h3><p>“Tùy anh”, “Ừ”, hoặc “Em không sao đâu”.</p></div><div class="row"><h3>2 · Khán giả thao tác</h3><p>Thiết lập, nhập câu, thêm bối cảnh và bấm giải mã.</p></div><div class="row"><h3>3 · Cả phòng đối chiếu</h3><p>Đọc gợi ý, đổi bối cảnh, chọn nhánh trả lời và hỏi tiếp.</p></div></div></div>
+<section class="slide live" aria-label="Demo với khán giả" hidden>
+<p class="eyebrow" data-en='08 · Live demo / With the audience'>08 · Live demo / Cùng khán giả</p><h2 data-en='Invite someone to interpret a message'>Mời một bạn làm người giải mã</h2>
+<div class="demo-layout"><div class="demo-panel"><p class="lead" data-en='“Pick a message and add some context. Let’s guess before AI answers!”'>“Bạn chọn lời nhắn và thêm bối cảnh. Cả phòng đoán trước khi AI trả lời nhé!”</p>
+<ol><li data-en='Choose “Whatever you want”, “Yeah”, or your own message.'>Chọn “Tùy anh”, “Ừ” hoặc một câu của bạn.</li><li data-en='Enter the context and interpret it directly in the app.'>Nhập bối cảnh và bấm giải mã ngay trong app.</li><li data-en='Change the context, choose a reply and continue.'>Đổi bối cảnh, chọn câu trả lời và hỏi tiếp.</li></ol>
+<button id="openApp" data-en='Reload manual app'>Tải lại app manual</button><p class="note" data-en='Use fictional situations or data you have permission to share.'>Chỉ dùng tình huống giả hoặc dữ liệu đã được đồng ý chia sẻ.</p></div>
+<iframe id="manualApp" title="App để khán giả demo manual" allow="microphone" data-demo-frame></iframe></div>
 </section>
-<section class="slide" aria-label="QR trải nghiệm và public" hidden>
-<p class="eyebrow">09 · Đến lượt bạn</p><h2>Quét QR.<br>Thử một tình huống của bạn.</h2><div class="grid"><div><p class="lead">Chọn một câu quen thuộc, thêm bối cảnh và xem bạn sẽ trả lời thế nào.</p><p id="accessStatus" class="status" role="status">Chưa xác minh trạng thái public.</p><div class="toolbar"><button class="primary" id="toggle" disabled>Bật public · 60 phút</button><button id="refresh" disabled>Cập nhật trạng thái</button></div><p class="note">Tắt public sẽ chặn lượt giải mã, voice onboarding và đọc kết quả mới. Trang app vẫn mở được; lượt xử lý đã bắt đầu có thể hoàn tất.</p><details><summary>Chuẩn bị trước buổi demo</summary><p>Chạy <code>npm run hub</code>, mở <code>http://127.0.0.1:8765/demo-slides.html</code>. App public cần được deploy với API demo-access.</p><p>Trong .env local: <code>DEMO_APP_URL</code> (HTTPS origin của app) và <code>DEMO_ADMIN_TOKEN</code>. Trên hosting: cùng token, <code>UPSTASH_REDIS_REST_URL</code> và <code>UPSTASH_REDIS_REST_TOKEN</code>. Dùng Redis riêng hoặc đặt <code>DEMO_ACCESS_KEY</code> riêng cho từng môi trường.</p><p>QR dùng QuickChart, cần internet và chỉ gửi URL public của app. Nếu QR lỗi, khán giả mở link bên cạnh. Slide và token quản trị giữ local.</p></details></div><div><div id="qrArea" class="qr-frame" hidden><img id="qr" alt="QR mở app Thông Dịch Viên Tình Yêu" referrerpolicy="no-referrer"><p id="qrError" class="note" hidden>Không tải được QR. Hãy dùng link bên dưới.</p><a id="audienceLink" class="url" target="_blank" rel="noopener noreferrer"></a><p class="note">Dùng dữ liệu giả để trải nghiệm ♡</p></div><p id="qrPlaceholder" class="big-quote" style="font-size:32px">QR sẽ hiện khi server xác nhận demo đã mở.</p></div></div>
+<section class="slide" aria-label="QR trải nghiệm" hidden>
+<p class="eyebrow" data-en='09 · Your turn'>09 · Đến lượt bạn</p><h2 data-en='Scan the QR.<br>Try your own scenario.'>Quét QR.<br>Thử một tình huống của bạn.</h2>
+<div class="grid"><div><p class="lead" data-en='Choose a familiar message, add context and see how you would respond.'>Chọn một câu quen thuộc, thêm bối cảnh và xem bạn sẽ trả lời thế nào.</p>
+<p class="note" data-en='The presenter manages access in Vercel Console. This slide does not change or verify the access status.'>Người trình bày quản lý truy cập trong Vercel Console. Slide không thay đổi hoặc xác minh trạng thái truy cập.</p>
+<p class="note" data-en='Only OPENAI_API_KEY is required on the server. Use fictional situations; AI calls may incur charges.'>Server chỉ cần OPENAI_API_KEY. Dùng tình huống giả; lượt gọi AI có thể phát sinh phí.</p>
+<p class="note" data-en='QR generation uses QuickChart and requires internet. If the QR cannot load, open the link directly.'>QR dùng QuickChart và cần internet. Nếu QR không tải được, mở link trực tiếp.</p></div>
+<div id="qrArea" class="qr-frame"><img id="qr" alt="QR mở app Thông Dịch Viên Tình Yêu" referrerpolicy="no-referrer" src="https://quickchart.io/qr?size=360&amp;margin=4&amp;ecLevel=M&amp;text=https%3A%2F%2Faigirlfriend-demo.vercel.app%2F">
+<p id="qrError" class="note" hidden data-en='QR could not load. Please use the link below.'>Không tải được QR. Hãy dùng link bên dưới.</p>
+<a id="audienceLink" class="url" href="https://aigirlfriend-demo.vercel.app/" target="_blank" rel="noopener noreferrer">https://aigirlfriend-demo.vercel.app/</a>
+<p class="note" data-en='Try it with fictional data ♡'>Dùng dữ liệu giả để trải nghiệm ♡</p></div></div>
 </section>
 </main>
-<nav class="controls" aria-label="Điều khiển slide"><button id="prev" aria-label="Slide trước">← Trước</button><span class="pages" id="counter" aria-live="polite"></span><span class="pages hint">← → chuyển slide · F toàn màn hình</span><div class="toolbar"><button id="fullscreen">Toàn màn hình</button><button id="next" aria-label="Slide tiếp">Tiếp →</button></div></nav>
+<nav class="controls" aria-label="Điều khiển slide"><button id="prev" aria-label="Slide trước" data-en='← Previous'>← Trước</button><button id="languageSwitch" aria-label="Switch slide language" title="Tiếng Việt / English">English</button><span class="pages" id="counter" aria-live="polite"></span><span class="pages hint" data-en='← → change slide · F fullscreen'>← → chuyển slide · F toàn màn hình</span><div class="toolbar"><button id="fullscreen" data-en='Fullscreen'>Toàn màn hình</button><button id="next" aria-label="Slide tiếp" data-en='Next →'>Tiếp →</button></div></nav>
 <progress id="progress" max="10" value="1" aria-label="Tiến độ trình chiếu"></progress><p id="toast" role="alert" hidden></p>
 <script>
 const $ = id => document.getElementById(id);
 const slides = [...document.querySelectorAll('.slide')];
 const token = document.querySelector('meta[name="hub-token"]')?.content;
-let index = 0, busy = false, publicState = null, demoRunning = false, runnerBusy = false, toastTimer;
+let slideLanguage = 'vi';
+const localized = [...document.querySelectorAll('[data-en]')];
+for (const node of localized) node.dataset.vi = node.innerHTML;
+const translatedAttributes = {"Giới thiệu": "Introduction", "Ý tưởng": "Idea", "Ví dụ bối cảnh": "Context example", "Cách làm": "Approach", "Công nghệ": "Technology", "Chức năng": "Features", "Hướng mở rộng": "Future development", "Demo tự động": "Automatic demo", "Demo với khán giả": "Audience demo", "QR trải nghiệm": "Audience QR", "Điều khiển slide": "Slide controls", "Slide trước": "Previous slide", "Slide tiếp": "Next slide", "Tiến độ trình chiếu": "Presentation progress", "Log demo": "Demo log", "App demo tự động": "Automatic demo app", "App để khán giả demo manual": "Audience demo app", "QR mở app Thông Dịch Viên Tình Yêu": "QR to open Love Interpreter"};
+const attributeNodes = [...document.querySelectorAll('[aria-label],[title],[alt]')].flatMap(node => ['aria-label','title','alt'].filter(attr => translatedAttributes[node.getAttribute(attr)]).map(attr => ({node, attr, vi:node.getAttribute(attr)})));
+const phrases = new Map(localized.map(node => [node.textContent, new DOMParser().parseFromString(node.dataset.en, 'text/html').body.textContent]));
+function tr(vi, en) { return slideLanguage === 'en' ? (en || phrases.get(vi) || vi) : vi; }
+function setSlideLanguage(value) {
+  slideLanguage = value;
+  document.documentElement.lang = value;
+  for (const {node,attr,vi} of attributeNodes) node.setAttribute(attr, value === 'en' ? translatedAttributes[vi] : vi);
+  document.title = tr('Demo · Thông Dịch Viên Tình Yêu', 'Demo · Love Interpreter');
+  for (const node of localized) {
+    if (['runStatus','log'].includes(node.id)) continue;
+    node.innerHTML = node.dataset[value];
+  }
+  $('languageSwitch').textContent = value === 'vi' ? 'English' : 'Tiếng Việt';
+  $('languageSwitch').setAttribute('aria-label', value === 'vi' ? 'Switch to English' : 'Chuyển sang tiếng Việt');
+  if (!$('log').textContent.trim() || ['Sẵn sàng.', 'Ready.'].includes($('log').textContent)) $('log').textContent = tr('Sẵn sàng.');
+  if (!demoRunning && !startingLocal) $('runStatus').textContent = tr("Mở slide qua Hub để chạy demo.", "Open these slides through Hub to run the demo.");
+  for (const frame of document.querySelectorAll('[data-demo-frame]')) syncAppLanguage(frame);
+}
+function syncAppLanguage(frame) {
+  const app = frame.contentWindow;
+  if (!app?.renderLanguage || demoRunning) return;
+  app.document.getElementById('setupLanguage').value = slideLanguage;
+  app.document.getElementById('setupLanguage').onchange();
+}
+$('languageSwitch').onclick = () => setSlideLanguage(slideLanguage === 'vi' ? 'en' : 'vi');
+for (const frame of document.querySelectorAll('[data-demo-frame]')) frame.addEventListener('load', () => syncAppLanguage(frame));
+let index = 0, busy = false, demoRunning = false, startingLocal = false, demoRun = 0, toastTimer;
 function toast(text) { $('toast').textContent = text; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 6000); }
 function show(next) {
   index = Math.min(slides.length - 1, Math.max(0, next));
@@ -54,10 +102,10 @@ function show(next) {
   $('counter').textContent = `${index + 1} / ${slides.length}`; $('progress').value = index + 1;
   $('prev').disabled = index === 0; $('next').disabled = index === slides.length - 1;
   history.replaceState(null, '', `#${index + 1}`); window.scrollTo(0, 0);
-  if (index === slides.length - 1 && token) refreshAccess();
+  if (token && (index === 7 || index === 8)) loadApp(index === 7 ? 'autoApp' : 'manualApp');
 }
 $('prev').onclick = () => show(index - 1); $('next').onclick = () => show(index + 1);
-async function fullscreen() { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { toast('Trình duyệt chưa cho phép toàn màn hình.'); } }
+async function fullscreen() { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { toast(tr("Trình duyệt chưa cho phép toàn màn hình.", "Fullscreen is not available in this browser.")); } }
 $('fullscreen').onclick = fullscreen;
 document.addEventListener('keydown', e => {
   if (e.target.closest('input,select,textarea,button,a,summary') || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -65,56 +113,103 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 'f') fullscreen();
 });
 async function request(path, body) {
-  if (!token) throw new Error('Chạy npm run hub và mở slide qua http://127.0.0.1:8765/demo-slides.html.');
+  if (!token) throw new Error(tr("Chạy npm run hub và mở slide qua http://127.0.0.1:8765/demo-slides.html.", "Run npm run hub and open http://127.0.0.1:8765/demo-slides.html."));
   const response = await fetch(path, { method: body ? 'POST' : 'GET', headers: { 'x-hub-token': token, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}), signal: AbortSignal.timeout(15000) });
-  const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Không kết nối được Hub.'); return data;
+  const data = await response.json(); if (!response.ok) throw new Error(data.error || tr("Không kết nối được Hub.", "Could not connect to Hub.")); return data;
 }
-function buttons() { $('run').disabled = !token || busy || demoRunning || runnerBusy; $('stop').disabled = !token || busy || !demoRunning; $('refresh').disabled = !token || busy; $('toggle').disabled = !token || busy || publicState === null; }
+function buttons() { $('languageSwitch').disabled = demoRunning || startingLocal; $('run').disabled = !token || busy || demoRunning || startingLocal; $('startLocal').disabled = !token || busy || demoRunning || startingLocal; $('openApp').disabled = !token; $('stop').disabled = !token || busy || !demoRunning; }
 async function action(body) { busy = true; buttons(); try { return await request('/hub/action', body); } finally { busy = false; buttons(); } }
-function access(data) {
-  publicState = data.public; $('accessStatus').textContent = data.public ? `Đang public · còn khoảng ${Math.max(1, Math.ceil(data.expiresIn / 60))} phút` : 'Demo đang đóng · khán giả chưa thể gửi lượt mới';
-  $('toggle').textContent = data.public ? 'Tắt public' : 'Bật public · 60 phút';
-  $('qrArea').hidden = !data.public; $('qrPlaceholder').hidden = data.public;
-  if (data.public) {
-    const url = new URL(data.url); if (url.protocol !== 'https:') throw new Error('URL khán giả phải dùng HTTPS.');
-    $('audienceLink').href = url.href; $('audienceLink').textContent = url.href;
-    const src = `https://quickchart.io/qr?size=360&margin=4&ecLevel=M&text=${encodeURIComponent(url.href)}`;
-    if ($('qr').getAttribute('src') !== src) { $('qrError').hidden = true; $('qr').src = src; }
-  }
-  buttons();
-}
-function accessError(error) { publicState = null; $('accessStatus').textContent = error.message; $('qrArea').hidden = true; $('qrPlaceholder').hidden = false; buttons(); }
-async function refreshAccess() { if (busy) return; try { access(await action({ task: 'demo-access' })); } catch (error) { accessError(error); } }
-$('refresh').onclick = refreshAccess;
-$('toggle').onclick = async () => {
-  if (busy || publicState === null) return;
-  const opening = !publicState; publicState = null; $('qrArea').hidden = true; $('qrPlaceholder').hidden = false;
-  try { access(await action({ task: 'demo-access', public: opening })); } catch (error) { accessError(error); toast('Chưa xác nhận thay đổi. Bấm cập nhật để đọc lại trạng thái server.'); }
-};
 $('qr').onerror = () => { $('qr').hidden = true; $('qrError').hidden = false; }; $('qr').onload = () => { $('qr').hidden = false; $('qrError').hidden = true; };
-function demo(data) {
-  runnerBusy = ['running','stopping'].includes(data.job?.status);
-  demoRunning = data.job?.kind === 'demo' && ['running','stopping'].includes(data.job.status);
-  $('runStatus').textContent = data.job ? `${data.job.kind}: ${data.job.status}` : 'Hub đã kết nối · sẵn sàng chạy';
-  if (data.job?.log) $('log').textContent = data.job.log;
-  // A different Hub task also occupies the runner slot.
-  $('run').disabled = !token || busy || demoRunning || ['running','stopping'].includes(data.job?.status);
-  $('stop').disabled = !token || busy || !demoRunning;
+function loadApp(id, reload = false) {
+  const frame = $(id);
+  if (token && (reload || !frame.getAttribute('src'))) frame.src = '/demo-app/';
 }
+async function appReady() {
+  if (!token) throw new Error(tr("Mở slide qua Hub để chạy demo.", "Open these slides through Hub to run the demo."));
+  const health = await fetch('/hub/app-health', { signal: AbortSignal.timeout(3000) }).catch(() => null);
+  if (!health?.ok) throw new Error(tr("App local chưa sẵn sàng. Bấm Khởi động app, đợi sẵn sàng rồi chạy lại.", "Local app is not ready. Click Start app, wait until ready, then try again."));
+  const frame = $('autoApp'); loadApp('autoApp');
+  const deadline = Date.now() + 10000;
+  while (!frame.contentWindow?.decode) {
+    if (Date.now() > deadline) throw new Error(tr("Chưa tải được app. Tải lại slide rồi thử lại.", "The app did not load. Reload the slides and try again."));
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  return frame.contentWindow;
+}
+$('startLocal').onclick = async () => {
+  if (busy || demoRunning) return;
+  startingLocal = true; buttons(); $('runStatus').textContent = tr("Đang khởi động app local…", "Starting the local app\u2026");
+  try {
+    const state = await request('/hub/state');
+    if (state.local?.status !== 'running') await action({ task: 'local' });
+    const deadline = Date.now() + 45000;
+    while (Date.now() < deadline) {
+      const response = await fetch('/hub/app-health', { signal: AbortSignal.timeout(3000) }).catch(() => null);
+      if (response?.ok) { $('runStatus').textContent = tr("App đã sẵn sàng · bấm Chạy tự động", "App ready \u00b7 click Run automatically"); loadApp('autoApp', true); return; }
+      const latest = await request('/hub/state');
+      if (latest.local?.status === 'failed' || latest.local?.log?.includes('Watcher error')) throw new Error(tr("App không khởi động được. Xem log trong Hub.", "The app could not start. Check the Hub log."));
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    throw new Error(tr("App chưa sẵn sàng sau 45 giây. Xem log trong Hub.", "The app is not ready after 45 seconds. Check the Hub log."));
+  } catch (error) { $('runStatus').textContent = error.message; toast(error.message); }
+  finally { startingLocal = false; buttons(); }
+};
 $('run').onclick = async () => {
-  if (!$('demoUrl').reportValidity() || busy) return;
-  try { demo(await action({ task: 'demo', url: $('demoUrl').value, voice: $('voice').value, cases: 'TC01,TC02,TC05' })); } catch (error) { toast(error.message); }
+  if (busy || demoRunning) return;
+  const run = ++demoRun; demoRunning = true; buttons(); $('startLocal').disabled = true;
+  $('log').textContent = '';
+  try {
+    const app = await appReady();
+    const doc = app.document;
+    app.openSetup(); doc.getElementById('setupLanguage').value = slideLanguage; doc.getElementById('setupDirection').value = 'gf'; doc.getElementById('setupName').value = 'Mai Demo'; app.finishSetup();
+    const scenarios = slideLanguage === 'en' ? [
+      ['Without context', 'Whatever you want', ''],
+      ['Forgotten date', 'I’m fine', 'We just argued because I forgot our date.'],
+      ['Minor fall', 'I’m fine', 'She just had a minor fall and I asked if she was hurt.'],
+      ['Synthetic chat image', '', 'The date was her birthday.'],
+    ] : [
+      ['Thiếu bối cảnh', 'Tùy anh', ''],
+      ['Quên cuộc hẹn', 'Em không sao đâu', 'Hai người vừa cãi nhau vì anh quên cuộc hẹn.'],
+      ['Té nhẹ', 'Em không sao đâu', 'Em vừa té nhẹ, anh hỏi có đau không.'],
+      ['Ảnh chat giả', '', 'Cuộc hẹn là sinh nhật em.'],
+    ];
+    for (let i = 0; i < scenarios.length; i++) {
+      if (run !== demoRun) break;
+      const [title, text, context] = scenarios[i];
+      app.newConversation(); doc.getElementById('text').value = text; doc.getElementById('context').value = context;
+      if (!text) {
+        const canvas = doc.createElement('canvas'); canvas.width = 850; canvas.height = 230;
+        const ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,850,230); ctx.fillStyle = '#111'; ctx.font = '28px -apple-system, sans-serif';
+        ctx.fillText(tr('CHAT GIẢ DÙNG ĐỂ DEMO', 'SYNTHETIC DEMO CHAT'),28,50); ctx.fillText(tr('Anh: Anh xin lỗi vì quên hẹn.', 'Me: Sorry I forgot our date.'),28,115); ctx.fillText(tr('Em: Em không sao đâu.', 'Her: I’m fine.'),28,175);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve));
+        const transfer = new app.DataTransfer(); transfer.items.add(new app.File([blob], 'chat-demo.png', { type: 'image/png' }));
+        const input = doc.getElementById('file');
+        const loaded = new Promise(resolve => { const timer = setInterval(() => { if (!doc.getElementById('attachment').hidden) { clearInterval(timer); resolve(); } }, 50); setTimeout(() => { clearInterval(timer); resolve(); }, 3000); });
+        input.files = transfer.files; input.dispatchEvent(new app.Event('change')); await loaded;
+      }
+      if (run !== demoRun) break;
+      $('runStatus').textContent = `${i + 1}/${scenarios.length} · ${title}`;
+      doc.getElementById('go').scrollIntoView({ block: 'center' });
+      await app.decode();
+      if (run !== demoRun) break;
+      if (!doc.getElementById('err').hidden) throw new Error(doc.getElementById('err').textContent);
+      doc.getElementById('out').scrollIntoView({ block: 'start', behavior: 'smooth' });
+      $('log').textContent += `${title}: ${tr("đã nhận kết quả AI.", "AI result received.")}\n`;
+      const until = Date.now() + 5000;
+      while (run === demoRun && Date.now() < until) await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    if (run === demoRun) $('runStatus').textContent = tr("Đã chạy xong · mời khán giả ở slide tiếp theo", "Demo finished \u00b7 invite the audience on the next slide");
+  } catch (error) { if (run === demoRun) { $('runStatus').textContent = error.message; toast(error.message); } }
+  finally { if (run === demoRun) { demoRunning = false; $('startLocal').disabled = false; buttons(); } }
 };
-$('stop').onclick = async () => { if (busy) return; try { demo(await action({ task: 'demo-stop' })); } catch (error) { toast(error.message); } };
-$('openApp').onclick = () => {
-  try { const url = new URL($('demoUrl').value); if (!['http:','https:'].includes(url.protocol) || url.username || url.password) throw new Error(); window.open(url.href, '_blank', 'noopener,noreferrer'); } catch { toast('Nhập App URL hợp lệ ở slide demo tự động.'); }
+$('stop').onclick = () => {
+  demoRun++; demoRunning = false;
+  $('autoApp').contentWindow?.newConversation?.();
+  $('runStatus').textContent = tr("Đã dừng demo · lượt AI đã gửi có thể vẫn hoàn tất ở server", "Demo stopped \u00b7 AI requests already sent may still finish on the server");
+  $('startLocal').disabled = false; buttons();
 };
-async function poll() {
-  if (!token || busy) return;
-  try { demo(await request('/hub/state')); } catch (error) { $('runStatus').textContent = error.message; $('run').disabled = true; $('stop').disabled = true; }
-  if (index === slides.length - 1) await refreshAccess();
-}
-buttons(); show(Number(location.hash.slice(1)) > 0 ? Number(location.hash.slice(1)) - 1 : 0); poll(); setInterval(poll, 5000);
+$('openApp').onclick = () => loadApp('manualApp', true);
+buttons(); show(Number(location.hash.slice(1)) > 0 ? Number(location.hash.slice(1)) - 1 : 0);
 </script>
 </body>
 </html>

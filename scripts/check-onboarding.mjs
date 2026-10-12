@@ -29,6 +29,8 @@ try {
   const origin = `http://127.0.0.1:${server.address().port}`;
   browser = await chromium.launch({ headless: true, args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] });
   const context = await browser.newContext({ permissions: ['microphone'], viewport: { width: 375, height: 850 } });
+  // The wizard checks below start from a fresh page; the app itself now defaults to the letter flow.
+  await context.addInitScript(() => { const key = 'love-interpreter.onboarding-flow.v1'; if (!localStorage.getItem(key)) localStorage.setItem(key, 'wizard'); });
   const page = await context.newPage(); page.setDefaultTimeout(8000);
   page.on('pageerror', e => errors.push(e.message));
   const $ = id => page.locator(`#${id}`);
@@ -62,12 +64,12 @@ try {
   await $('setupNext').click(); assert.equal(await $('setupName').inputValue(), ' Emma ');
   await noOverflow(); await screenshot('manual-en-mobile');
   await $('reviewSetup').click();
-  assert.equal(await page.evaluate(() => localStorage.length), 0);
+  assert.equal(await page.evaluate(() => localStorage.getItem('love-interpreter.preferences.v1')), null);
   assert.match(await $('setupSummary').textContent(), /English · Girlfriend · Emma/);
   await $('editSetup').click(); await $('setupName').fill('Emma');
   await $('reviewSetup').click(); await $('confirmSetup').click();
   assert.equal(await page.locator('html').getAttribute('lang'), 'en');
-  assert.equal(await $('go').textContent(), 'Decode! ✨');
+  assert.equal(await $('go').getAttribute('aria-label'), 'Decode! ✨');
   assert.equal(await $('speak').textContent(), '🔊 Read aloud');
   assert.equal(await $('mic').getAttribute('aria-label'), 'Enter a message by voice');
   assert.equal(await $('inputTitle').textContent(), '💌 What did Emma say?');
@@ -77,13 +79,13 @@ try {
   await screenshot('result-en-mobile'); await noOverflow();
   await page.reload(); assert.equal(await $('onboarding').isVisible(), false);
   assert.equal(await $('settings').textContent(), 'Start over');
-  await $('settings').click();
+  await page.evaluate(() => { document.getElementById('chatTools').open = true; }); await $('settings').click();
   assert.equal(await $('setupDirection').inputValue(), '');
   assert.equal(await $('setupName').inputValue(), '');
   await $('setupLanguage').selectOption('vi'); await $('cancelSetup').click();
   assert.equal(await page.locator('html').getAttribute('lang'), 'en');
   for (const language of ['vi', 'en']) for (const direction of ['gf', 'bf']) {
-    await $('settings').click(); await $('setupLanguage').selectOption(language); await $('setupNext').click(); await $(direction === 'bf' ? 'chooseBf' : 'chooseGf').click(); await $('setupNext').click();
+    await page.evaluate(() => { document.getElementById('chatTools').open = true; }); await $('settings').click(); await $('setupLanguage').selectOption(language); await $('setupNext').click(); await $(direction === 'bf' ? 'chooseBf' : 'chooseGf').click(); await $('setupNext').click();
     assert.equal(await $('setupName').inputValue(), '');
     await $('setupName').fill('Emma');
     await $('reviewSetup').click(); await $('confirmSetup').click();
@@ -97,7 +99,7 @@ try {
   assert.equal(await $('setupName').inputValue(), 'Emma');
   assert.equal(await $('setupDirection').inputValue(), 'gf');
   assert.equal(await $('setupTranscript').textContent(), voice.transcript);
-  assert.equal(await page.evaluate(() => localStorage.length), 0);
+  assert.equal(await page.evaluate(() => localStorage.getItem('love-interpreter.preferences.v1')), null);
   await screenshot('voice-review-mobile');
   voice = { language: null, direction: 'bf', partnerName: null, transcript: 'Decode my boyfriend.' };
   await $('setupName').fill(''); await record();
@@ -126,6 +128,9 @@ try {
   assert.equal(requests.length, count);
 
   // Demo switcher: letter, chat and swipe write the same profile as the wizard.
+  const plain = await browser.newPage({ viewport: { width: 375, height: 850 } }); await plain.goto(origin);
+  assert.equal(await plain.locator('#letterFlow').isVisible(), true); assert.equal(await plain.locator('#setupForm').isVisible(), false);
+  assert.equal(await plain.locator('#flowCurrent').textContent(), 'Lá thư'); await plain.close();
   await page.setViewportSize({ width: 375, height: 850 });
   const fresh = async name => {
     await page.evaluate(() => localStorage.clear()); await page.reload();
@@ -147,7 +152,7 @@ try {
   await $('letterFlow').locator('[type="submit"]').click();
   await decodesAs('en', 'gf', 'Emma');
   await page.reload(); assert.equal(await $('flowCurrent').textContent(), 'Letter');
-  await $('settings').click(); assert.equal(await $('letterFlow').isVisible(), true);
+  await page.evaluate(() => { document.getElementById('chatTools').open = true; }); await $('settings').click(); assert.equal(await $('letterFlow').isVisible(), true);
 
   await fresh('chat');
   await page.locator('#chatReplies button', { hasText: 'Hello' }).click();

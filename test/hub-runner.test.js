@@ -157,23 +157,27 @@ test('HTTP rejects foreign hosts, origins, absent token and oversized or invalid
   assert.equal(state.status, 200); assert.doesNotMatch(state.output, /secret-test-key/);
 });
 
-test('slides stay local and public control uses only server configuration without leaking secrets', async t => {
+test('slides stay local and obsolete public control is rejected', async t => {
   const { hub, root } = await fixture(t);
   await writeFile(join(root, 'docs/demo-slides.html'), '<head><!--HUB_TOKEN--></head>');
   const page = await request(hub, 'GET', '/demo-slides.html'); assert.equal(page.status, 200); assert.match(page.output, /meta name="hub-token"/);
-  await assert.rejects(hub.action({ task: 'demo-access' }), /DEMO_APP_URL/);
-  await writeFile(join(root, '.env'), 'DEMO_APP_URL=https://demo.example\nDEMO_ADMIN_TOKEN=admin-secret\n');
+  await assert.rejects(hub.action({ task: 'demo-access' }), /Task không hợp lệ/);
+});
+
+test('embedded demo serves only app assets and proxies paid routes to fixed local app', async t => {
+  const { hub, root } = await fixture(t);
+  await writeFile(join(root, 'index.html'), '<head><title>App</title></head>');
+  const frame = await request(hub, 'GET', '/demo-app/');
+  assert.equal(frame.status, 200); assert.match(String(frame.output), /base href="\/demo-app\/"/);
+  assert.equal((await request(hub, 'GET', '/demo-app/.env')).status, 404);
   const calls = [];
-  t.mock.method(globalThis, 'fetch', async (url, options) => { calls.push({ url: String(url), options }); return { ok: true, json: async () => ({ public: true, expiresIn: 3600 }) }; });
-  const result = await hub.action({ task: 'demo-access', public: true, url: 'https://attacker.example' });
-  assert.equal(calls[0].url, 'https://demo.example/api/demo-access');
-  assert.equal(calls[0].options.headers.Authorization, 'Bearer admin-secret');
-  assert.equal(calls[0].options.redirect, 'error'); assert.equal(calls[0].options.body, '{"public":true}');
-  assert.equal(result.url, 'https://demo.example/'); assert.doesNotMatch(JSON.stringify(result), /admin-secret/);
-  await assert.rejects(hub.action({ task: 'demo-access', public: 'true' }), /boolean/);
-  for (const url of ['http://demo.example', 'https://user:pass@demo.example', 'https://demo.example/path']) {
-    await writeFile(join(root, '.env'), `DEMO_APP_URL=${url}\nDEMO_ADMIN_TOKEN=admin-secret\n`);
-    await assert.rejects(hub.action({ task: 'demo-access' }), /HTTPS origin/);
-  }
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    calls.push({ url: String(url), options });
+    return new Response('{"meaning":"Mock"}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+  });
+  assert.equal((await request(hub, 'POST', '/api/translate', '{"text":"Ừ"}')).status, 200);
+  assert.equal(calls[0].url, 'http://127.0.0.1:3000/api/translate');
+  assert.equal((await request(hub, 'POST', '/api/translate', '{}', { origin: 'https://evil.test' })).status, 403);
+  assert.equal((await request(hub, 'POST', '/api/demo-access', '{}')).status, 404);
   assert.equal(calls.length, 1);
 });

@@ -1,28 +1,25 @@
 # Slide demo HTML
 
-Mở `docs/demo-slides.html` trực tiếp để xem nội dung. Để chạy runner và điều khiển public:
+Chạy `npm run hub`, mở http://127.0.0.1:8765/demo-slides.html. Có 10 slide với hai phiên bản Việt/English, ngày demo 12/10/2026. Nút English / Tiếng Việt ở thanh điều khiển đổi nội dung mà giữ nguyên vị trí slide. Demo tự động dùng ngôn ngữ đang chọn; nút ngôn ngữ tạm khóa khi đang chạy/khởi động app. Phím ←/→, Home/End chuyển slide; F bật/tắt toàn màn hình. Mở HTML trực tiếp chỉ xem nội dung; demo cần Hub.
 
-```sh
-npm run hub
-```
+## Demo ngay trong slide
 
-Mở http://127.0.0.1:8765/demo-slides.html. Phím ←/→, Home/End chuyển slide; F bật/tắt toàn màn hình. Có 10 slide tiếng Việt, demo tự động TC01/TC02/TC05, phần mời khán giả thao tác và QR cuối bài. URL trình diễn mặc định là app local port 3000; cần khởi chạy app từ Hub hoặc dùng app đã deploy. Runner cần Playwright/Chromium như `manual-demo.md`. Demo thật có thể gọi API tính phí.
+- Slide 8: bấm **Khởi động app**, đợi thông báo sẵn sàng, rồi bấm **Chạy tự động**. App chạy trong iframe ngay trên slide, không mở cửa sổ runner khác.
+- Bốn lượt minh họa ba nhóm tình huống: thiếu bối cảnh, cùng câu trong hai bối cảnh, ảnh chat giả. Mỗi kết quả giữ 5 giây. **Dừng** ngăn lượt tiếp theo; lượt API đã gửi có thể vẫn hoàn tất ở server.
+- Slide 9: khán giả hoàn tất onboarding và thao tác trực tiếp trong iframe manual. Có nút tải lại app. Chỉ dùng dữ liệu giả/được đồng ý chia sẻ.
+- Demo dùng API local thật và có thể phát sinh phí AI. Không tự chấm nội dung hoặc ghi manual Pass. Runner Playwright 12 case vẫn có ở Hub như trước.
+- Hub phục vụ đúng tài nguyên app ở `/demo-app/`; chỉ proxy translate/speak/onboarding tới app cố định `127.0.0.1:3000`. Không proxy API quản trị hoặc URL tùy ý.
+- Vercel dev phải có CLI/project đã liên kết và `.env` chứa API key. `.vercelignore` loại `mobile/` khỏi web để tránh watcher quét build Flutter gây `EMFILE`, đồng thời không đưa source/build mobile lên web.
 
-## Chuẩn bị public
+Chữ nội dung desktop khoảng 28 px, chú thích 22 px và nút 22 px. Dùng `-apple-system`/SF Pro trên macOS và iOS; hệ thống khác dùng font fallback. Không đóng gói/phân phối binary font Apple. App nhúng cũng dùng SF system font và cỡ chữ lớn hơn.
 
-- `.env` local: `DEMO_APP_URL=https://<domain-app>` (origin HTTPS, không path/query), `DEMO_ADMIN_TOKEN=<secret-ngẫu-nhiên-dài>`.
-- App hosting: cùng `DEMO_ADMIN_TOKEN`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`. Cấu hình `OPENAI_API_KEY` như app hiện có.
-- Tách Redis hoặc `DEMO_ACCESS_KEY` giữa production/preview/local. Mặc định key là `thong-dich-tinh-yeu:demo:public`.
-- Bản app cần có `api/demo-access.js` cùng gate ở translate/speak/onboarding. Slide và Hub giữ local, được loại khỏi deployment bởi `.vercelignore`.
-- Không nhập token vào HTML, URL, QR hoặc trình duyệt. Hub đọc từ `.env` và proxy request xác thực đến URL cố định ở server; không theo redirect.
+## Link production và QR cuối bài
 
-Khi hosting có `DEMO_ADMIN_TOKEN`, ba API trả phí mặc định đóng. Redis lỗi/thiếu thì trả 503, không cho qua. Nếu không cấu hình token, app giữ hành vi mở như trước; slide không thể nhận trạng thái public từ API quản trị.
+QR/link cố định: https://aigirlfriend-demo.vercel.app/. QR luôn hiển thị, kể cả khi mở file HTML trực tiếp; không cần DEMO_APP_URL, admin token hoặc Redis. Người trình bày tự quản lý quyền truy cập trong Vercel Console; slide không xác minh truy cập và không tự đóng sau 60 phút.
 
-Ở slide cuối, đọc trạng thái rồi bấm **Bật public · 60 phút**. Redis tự hết hạn sau 60 phút, hoặc bấm **Tắt public** để đóng sớm. QR và link chỉ hiện khi server xác nhận mở. Trạng thái được đọc lại mỗi 5 giây khi ở slide cuối; lỗi kết nối làm ẩn QR và vô hiệu hóa toggle cho đến lần đọc thành công. Nếu muốn demo trên app có gate, mở public trước khi chạy runner/manual.
+Chỉ `OPENAI_API_KEY` bắt buộc trong .env local và Vercel Production. Đã bỏ cấu hình model/TTS/transcribe tùy chọn khỏi .env và .env.example; server dùng các mặc định có sẵn. Chọn model trong Hub vẫn có thể tạo lại cấu hình model khi cần. Rate limit Redis hiện có vẫn được giữ trong code cho các môi trường khác, nhưng không cần cấu hình Redis cho buổi demo này. Public gate riêng và API demo-access đã được gỡ.
 
-Tắt public chặn lượt mới qua cả ba API, kể cả người đã giữ link. Trang HTML, kết quả và lịch sử đã tải vẫn xem được; lượt đang xử lý có thể hoàn tất. Không có đăng nhập/quyền presenter riêng cho các API trả phí.
-
-QR được render bằng [QuickChart](https://quickchart.io/documentation/qr-codes/), cần internet và gửi URL public cho dịch vụ đó. Nếu tải QR thất bại, giữ link để khán giả mở trực tiếp. Quét QR thật trước buổi trình diễn.
+[QuickChart](https://quickchart.io/documentation/qr-codes/) render QR bằng URL public và cần internet. QR lỗi vẫn có link mở trực tiếp. Không đặt API key trong HTML/QR. Quét thử bằng điện thoại trước buổi trình diễn.
 
 ## Kiểm chứng
 
@@ -31,4 +28,4 @@ npm test
 node scripts/check-demo-slides.mjs
 ```
 
-Script browser dùng backend và runner mock; kiểm tra 10 slide ở 1440×900 và 375×812, chuyển trang/bàn phím, URL QR và fallback khi dịch vụ QR lỗi, public mở/đóng/lỗi và runner khởi chạy/dừng qua Hub. Ảnh trong `.manual-test/verification/slides/`. Không gọi AI trả phí, không đổi public trên hosting và không ghi kết quả manual Pass. Cần kiểm tra riêng deployment, Redis thật, quét QR bằng điện thoại và demo AI/mic/audio thật.
+Browser check dùng app thật trong iframe với API mock: desktop/mobile, font/cỡ chữ, tự động bốn lượt gồm ảnh, dừng, manual onboarding/giải mã, QR production cố định/fallback và không còn public gate và file standalone. Ảnh ở `.manual-test/verification/slides/`. Không gọi AI trả phí hoặc đổi quyền truy cập trên hosting; cần kiểm riêng quét QR và mic/audio thật.

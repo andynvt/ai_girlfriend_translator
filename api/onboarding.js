@@ -1,4 +1,3 @@
-import { checkDemoAccess } from '../lib/demo-access.js';
 import { message, parseLanguage, parseName } from '../lib/preferences.js';
 import { rateLimit, tooMany } from '../lib/rate-limit.js';
 
@@ -33,7 +32,6 @@ export function normalizeProfile(raw) {
 export default async function handler(req, res) {
   const language = req.body?.language === 'en' ? 'en' : 'vi';
   if (req.method !== 'POST') return res.status(405).json({ error: message(language, 'Chỉ nhận POST', 'POST only') });
-  if (!(await checkDemoAccess(req, res))) return;
   if (!(await rateLimit(req, 'onboarding'))) return res.status(429).json({ error: tooMany(language) });
   let input;
   try { input = parseAudio(req.body); }

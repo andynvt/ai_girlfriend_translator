@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" type="image/png" sizes="256x256" href="assets/tim-bot/favicon.png">
 <title>Thông Dịch Viên Tình Yêu 💘</title>
 <link rel="stylesheet" href="css/app.css">
@@ -23,7 +23,7 @@
     <div class="badge" data-i18n="Một chút AI, một chút thấu hiểu ✨">Một chút AI, một chút thấu hiểu ✨</div>
     <h1><span data-i18n="Thông Dịch Viên" style="color:inherit">Thông Dịch Viên</span> <span data-i18n="Tình Yêu">Tình Yêu</span></h1>
     <p class="sub" data-i18n="Đọc lời người ấy. Gỡ rối trái tim bạn.">Đọc lời người ấy. Gỡ rối trái tim bạn.</p>
-    <button id="settings" hidden data-i18n="Làm lại từ đầu">Làm lại từ đầu</button>
+
   </header>
   <section class="panel onboarding" id="onboarding" aria-labelledby="onboardingTitle">
     <h2 id="onboardingTitle" tabindex="-1" data-i18n="Chào bạn, làm quen một chút nhé 💘">Chào bạn, làm quen một chút nhé 💘</h2>
@@ -93,46 +93,32 @@
     <p id="setupStatus" class="hint" role="status"></p><p id="setupTranscript" class="transcript" hidden></p><p id="setupError" class="err" role="alert" hidden></p>
     <button id="cancelSetup" hidden data-i18n="Hủy thay đổi">Hủy thay đổi</button>
   </section>
-  <div class="workspace" id="app" hidden>
-    <section class="panel" aria-labelledby="inputTitle">
-      <div class="bot-intro"><span id="inputBot" class="tim-bot" data-state="input" aria-hidden="true"></span><div><h2 id="inputTitle" data-i18n="💌 Người ấy nói gì?">💌 Người ấy nói gì?</h2><p id="inputBubble" class="bot-bubble"></p></div></div>
-      <p id="turnCount" class="hint" role="status"></p>
-      <div class="row"><button id="newConversation" data-i18n="Cuộc trò chuyện mới">Cuộc trò chuyện mới</button></div>
-      <p class="hint" id="followup" hidden></p>
-      <div id="chosenResponse" hidden><p id="chosenText"></p><label for="sentReply" data-i18n="Câu bạn thực sự đã gửi — không bắt buộc">Câu bạn thực sự đã gửi — không bắt buộc</label><textarea id="sentReply" maxlength="1000" rows="2"></textarea></div>
-      <label for="text" data-i18n="Lời nhắn cần giải mã">Lời nhắn cần giải mã</label>
-      <textarea id="text" maxlength="500" aria-describedby="inputHint" placeholder="Ví dụ: Em không sao đâu…"></textarea>
-      <p class="hint" id="inputHint" data-i18n="Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.">Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.</p>
-      <p class="hint" data-i18n="Thử một câu quen quen nhé ↓">Thử một câu quen quen nhé ↓</p>
-      <div class="chips" id="chips" role="group" aria-label="Câu ví dụ" data-i18n-aria-label="Câu ví dụ"></div>
-      <label for="context" data-i18n="Bối cảnh — không bắt buộc">Bối cảnh — không bắt buộc</label>
-      <textarea id="context" maxlength="1000" rows="3" aria-describedby="contextHint" placeholder="Ví dụ: Hai người vừa cãi nhau vì mình quên cuộc hẹn…" data-i18n-placeholder="Ví dụ: Hai người vừa cãi nhau vì mình quên cuộc hẹn…"></textarea>
-      <p class="hint" id="contextHint" data-i18n="Trước đó hai người nói gì? Có chuyện gì vừa xảy ra? Tối đa 1.000 ký tự.">Trước đó hai người nói gì? Có chuyện gì vừa xảy ra? Tối đa 1.000 ký tự.</p>
-      <div id="attachment" hidden>
-        <img id="preview" alt="Ảnh đoạn chat đã chọn" data-i18n-alt="Ảnh đoạn chat đã chọn">
-        <button id="removeImage" data-i18n="✕ Xóa ảnh">✕ Xóa ảnh</button>
-      </div>
-      <div class="row">
-        <button class="icon" id="mic" title="Nói" data-i18n-title="Nói" aria-label="Nhập lời nhắn bằng giọng nói" data-i18n-aria-label="Nhập lời nhắn bằng giọng nói">🎤</button>
-        <button class="icon" id="pick" title="Ảnh chụp đoạn chat" data-i18n-title="Ảnh chụp đoạn chat" aria-label="Chọn ảnh đoạn chat" data-i18n-aria-label="Chọn ảnh đoạn chat">📷</button>
-        <input type="file" id="file" accept="image/*" hidden>
-        <button id="go" data-i18n="Giải mã! ✨">Giải mã! ✨</button>
-      </div>
-      <p class="hint" id="status" role="status"></p>
+  <section class="chat-shell" id="app" hidden aria-label="Cuộc trò chuyện" data-i18n-aria-label="Cuộc trò chuyện">
+    <div class="chat-header">
+      <details id="historyPanel" class="chat-menu" hidden><summary aria-label="Lịch sử" data-i18n-aria-label="Lịch sử">‹ <span data-i18n="Lịch sử">Lịch sử</span></summary><div class="menu-content"><h2 data-i18n="Các cuộc đã lưu">Các cuộc đã lưu</h2><div id="historyList"></div><details class="history-info"><summary data-i18n="Về lịch sử">Về lịch sử</summary><p class="hint" data-i18n="Chọn câu để lưu và hỏi tiếp. Lịch sử chỉ ở trình duyệt này; xóa dữ liệu trình duyệt sẽ mất lịch sử. Người dùng chung thiết bị có thể xem. Kết quả chưa lưu sẽ mất khi đóng trang.">Chọn câu để lưu và hỏi tiếp. Lịch sử chỉ ở trình duyệt này; xóa dữ liệu trình duyệt sẽ mất lịch sử. Người dùng chung thiết bị có thể xem. Kết quả chưa lưu sẽ mất khi đóng trang.</p></details></div></details>
+      <div class="chat-identity"><h2 id="chatPartner"></h2><p id="turnCount" class="hint" role="status"></p></div>
+      <details id="chatTools" class="chat-menu tools-menu"><summary aria-label="Tùy chọn" data-i18n-aria-label="Tùy chọn">•••</summary><div class="menu-content"><button id="newConversation" data-i18n="Cuộc trò chuyện mới">Cuộc trò chuyện mới</button><div id="saveDock"><button id="saveConversation" data-i18n="Lưu kết quả">Lưu kết quả</button></div><button id="settings" hidden data-i18n="Làm lại từ đầu">Làm lại từ đầu</button></div></details>
+    </div>
+    <p class="simulation-note" data-i18n="Giả lập hội thoại · App không gửi tin nhắn cho người ấy">Giả lập hội thoại · App không gửi tin nhắn cho người ấy</p>
+    <div id="chatScroll" class="chat-scroll">
+      <div class="empty" id="empty"><span id="inputBot" class="tim-bot" data-state="greet" aria-hidden="true"></span><h2 id="inputTitle" data-i18n="💌 Người ấy nói gì?">💌 Người ấy nói gì?</h2><p id="inputBubble"></p><div class="chips" id="chips" role="group" aria-label="Câu ví dụ" data-i18n-aria-label="Câu ví dụ"></div></div>
+      <div id="conversationLog" aria-label="Tin nhắn và phân tích" data-i18n-aria-label="Tin nhắn và phân tích"></div>
+      <div class="loading" id="loading" hidden><p class="message incoming" id="pendingMessage"></p><div class="bot-intro"><span class="tim-bot" data-state="waiting" aria-hidden="true"></span><div><p data-i18n="Đang phân tích tâm lý…">Đang phân tích tâm lý…</p><p id="loadingLine"></p></div></div></div>
       <p class="err" id="err" role="alert" hidden></p>
-    </section>
-    <section class="panel" aria-label="Kết quả giải mã" data-i18n-aria-label="Kết quả giải mã">
-      <div class="empty" id="empty">
-        <span class="tim-bot" data-state="greet" aria-hidden="true"></span>
-        <h2 data-i18n="Trái tim đang hóng chuyện">Trái tim đang hóng chuyện</h2>
-        <p data-i18n="Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!">Gửi một lời nhắn, mình cùng đọc vị người ấy nhé!</p>
-      </div>
-      <div class="loading" id="loading" hidden>
-        <span class="tim-bot" data-state="waiting" aria-hidden="true"></span>
-        <h2 data-i18n="Đang phân tích tâm lý…">Đang phân tích tâm lý…</h2>
-        <div class="scan" aria-hidden="true"><div></div></div>
-        <p id="loadingLine"></p>
-      </div>
+    </div>
+    <div class="chat-composer">
+      <p class="hint" id="followup" hidden></p><p class="hint" id="historyStatus" role="status"></p><div id="retrySlot"></div><p class="hint" id="status" role="status"></p>
+      <div id="attachment" hidden><img id="preview" alt="Ảnh đoạn chat đã chọn" data-i18n-alt="Ảnh đoạn chat đã chọn"><button id="removeImage" data-i18n="✕ Xóa ảnh">✕ Xóa ảnh</button></div>
+      <p id="contextChip" class="hint" hidden></p>
+      <label for="text" id="composerLabel" data-i18n="Nhập lời người ấy nói">Nhập lời người ấy nói</label>
+      <div class="composer-row">
+        <details id="contextMenu" class="chat-menu context-menu"><summary aria-label="Ảnh và bối cảnh" data-i18n-aria-label="Ảnh và bối cảnh">＋</summary><div class="menu-content"><button class="icon" id="pick" data-i18n="Chọn ảnh đoạn chat">Chọn ảnh đoạn chat</button><label for="context" data-i18n="Bối cảnh — không bắt buộc">Bối cảnh — không bắt buộc</label><textarea id="context" maxlength="1000" rows="3" aria-describedby="contextHint" placeholder="Ví dụ: Hai người vừa cãi nhau vì mình quên cuộc hẹn…" data-i18n-placeholder="Ví dụ: Hai người vừa cãi nhau vì mình quên cuộc hẹn…"></textarea><p class="hint" id="contextHint" data-i18n="Trước đó hai người nói gì? Có chuyện gì vừa xảy ra? Tối đa 1.000 ký tự.">Trước đó hai người nói gì? Có chuyện gì vừa xảy ra? Tối đa 1.000 ký tự.</p><button id="closeContext" type="button" data-i18n="Xong">Xong</button></div></details>
+        <textarea id="text" maxlength="500" rows="1" aria-describedby="inputHint"></textarea>
+        <button class="icon" id="mic" title="Nói" data-i18n-title="Nói" aria-label="Nhập lời nhắn bằng giọng nói" data-i18n-aria-label="Nhập lời nhắn bằng giọng nói">🎤</button>
+        <button id="go" title="Giải mã! ✨" data-i18n-title="Giải mã! ✨" aria-label="Giải mã! ✨" data-i18n-aria-label="Giải mã! ✨">↑</button>
+      </div><input type="file" id="file" accept="image/*" hidden><p class="hint" id="inputHint" data-i18n="Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.">Tối đa 500 ký tự, hoặc chọn một ảnh đoạn chat.</p>
+    </div>
+    <div id="resultDock" hidden>
       <div id="out" hidden aria-live="polite" aria-atomic="true">
         <div class="card danger-card">
           <div class="danger-heading">
@@ -142,15 +128,15 @@
           <div class="meter" role="meter" aria-label="Mức nguy hiểm" data-i18n-aria-label="Mức nguy hiểm" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="dangerMeter"><div id="bar"></div></div>
         </div>
         <div class="card bubble"><h3 data-i18n="🧠 Ý thật sự">🧠 Ý thật sự</h3><p id="meaning"></p></div>
-        <div class="card bubble reply-card"><h3 data-i18n="💬 Nên trả lời">💬 Nên trả lời</h3><p id="reply"></p><button id="chooseReply" data-i18n="Chọn câu này & lưu">Chọn câu này & lưu</button></div>
-        <div class="card bubble avoid-card"><h3 data-i18n="🙊 Tuyệt đối đừng nói">🙊 Tuyệt đối đừng nói</h3><p id="avoid"></p><button id="chooseAvoid" data-i18n="Chọn câu này & lưu">Chọn câu này & lưu</button></div>
+        <div class="choice-heading"><h3 data-i18n="Bạn muốn trả lời thế nào?">Bạn muốn trả lời thế nào?</h3><p class="hint" data-i18n="Chọn một câu để lưu và hỏi tiếp.">Chọn một câu để lưu và hỏi tiếp.</p></div><div class="result-choices"><div class="card bubble reply-card"><h3 data-i18n="💬 Nên trả lời">💬 Nên trả lời</h3><p id="reply"></p><button id="chooseReply" aria-pressed="false" data-i18n="Chọn & hỏi tiếp">Chọn & hỏi tiếp</button></div>
+        <div class="card bubble avoid-card"><h3 data-i18n="🙊 Tuyệt đối đừng nói">🙊 Tuyệt đối đừng nói</h3><p id="avoid"></p><button id="chooseAvoid" aria-pressed="false" data-i18n="Chọn & hỏi tiếp">Chọn & hỏi tiếp</button></div></div>
         <div id="sourceReview" hidden><label for="sourceText" data-i18n="Lời đọc từ ảnh — kiểm tra trước khi lưu">Lời đọc từ ảnh — kiểm tra trước khi lưu</label><textarea id="sourceText" maxlength="1000" rows="3"></textarea></div>
-        <button id="saveConversation" data-i18n="Lưu kết quả / thử lưu lại">Lưu kết quả / thử lưu lại</button>
+
         <button id="speak" data-i18n="🔊 Đọc tôi nghe">🔊 Đọc tôi nghe</button>
       </div>
-    </section>
-  </div>
-  <section class="panel" id="historyPanel" hidden><h2 data-i18n="Lịch sử trên thiết bị">Lịch sử trên thiết bị</h2><p class="hint" data-i18n="Chọn câu để lưu và hỏi tiếp. Lịch sử chỉ ở trình duyệt này; xóa dữ liệu trình duyệt sẽ mất lịch sử. Người dùng chung thiết bị có thể xem. Kết quả chưa lưu sẽ mất khi đóng trang.">Chọn câu để lưu và hỏi tiếp. Lịch sử chỉ ở trình duyệt này; xóa dữ liệu trình duyệt sẽ mất lịch sử. Người dùng chung thiết bị có thể xem. Kết quả chưa lưu sẽ mất khi đóng trang.</p><p id="historyStatus" role="status"></p><div id="historyList"></div><div id="conversationLog"></div></section>
+      <details id="chosenResponse" hidden><summary data-i18n="Sửa / xác nhận câu đã gửi">Sửa / xác nhận câu đã gửi</summary><p id="chosenText"></p><label for="sentReply" data-i18n="Câu bạn thực sự đã gửi — không bắt buộc">Câu bạn thực sự đã gửi — không bắt buộc</label><textarea id="sentReply" maxlength="1000" rows="2"></textarea></details>
+    </div>
+  </section>
   <p class="footer" data-i18n="Giải mã cho vui thôi nhé. Muốn hiểu thật, hãy hỏi người ấy 💗">Giải mã cho vui thôi nhé. Muốn hiểu thật, hãy hỏi người ấy 💗</p>
 </main>
 
